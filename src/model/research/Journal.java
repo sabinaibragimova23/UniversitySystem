@@ -37,6 +37,20 @@ public class Journal {
                     ": new paper published — '" + paper.getTitle() + "'");
         }
     }
+    
+    @Override
+    public void addObserver(Observer o) {
+        if (o instanceof User) {
+            User u = (User) o;
+            if (!subscribers.contains(u)) {
+                subscribers.add(u);
+            }
+        }
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        subscribers.remove(o);
 
     @Override
     public String toString() {
