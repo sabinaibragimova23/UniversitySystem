@@ -1,5 +1,6 @@
 package model.observer;
 
-public class Observer {
 
+public interface Observer {
+    void update(String event, Object data);
 }

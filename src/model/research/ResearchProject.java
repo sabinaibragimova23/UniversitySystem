@@ -1,19 +1,22 @@
 package model.research;
 
 import model.exceptions.NotResearcherException;
+
 import model.users.User;
 import java.util.*;
-
+import model.users.Teacher;
 public class ResearchProject {
 
     private String topic;
     private List<ResearchPaper> papers;
     private List<Researcher> participants;
+    private String status;
 
     public ResearchProject(String topic) {
         this.topic = topic;
         this.papers = new ArrayList<>();
         this.participants = new ArrayList<>();
+        this.status = "NEW";
     }
 
 
@@ -27,6 +30,18 @@ public class ResearchProject {
 
     public void addPaper(ResearchPaper paper) {
         papers.add(paper);
+    }
+    
+    public void addParticipant(Researcher researcher) {
+        participants.add(researcher);
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

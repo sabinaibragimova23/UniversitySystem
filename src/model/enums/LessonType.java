@@ -1,5 +1,5 @@
 package model.enums;
 
-public class LessonType {
-
+public enum LessonType { 
+	LECTURE, PRACTICE 
 }

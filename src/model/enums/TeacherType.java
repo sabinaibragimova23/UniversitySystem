@@ -1,5 +1,5 @@
 package model.enums;
 
-public class TeacherType {
-
+public enum TeacherType { 
+	TUTOR, LECTOR, PROFESSOR 
 }

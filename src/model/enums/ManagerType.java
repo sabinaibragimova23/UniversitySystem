@@ -1,5 +1,5 @@
 package model.enums;
 
-public class ManagerType {
-
+public enum ManagerType { 
+	OR, DEAN_OFFICE, DEPARTMENT 
 }

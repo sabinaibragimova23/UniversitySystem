@@ -1,20 +1,22 @@
 package model.patterns;
 
-import java.util.*;
-import model.users.User;
 import model.academic.Course;
+import model.comunication.Request;
+import model.comunication.News;
+import model.users.User;
+import java.util.*;
 
 public class DataStorage {
-
     private static DataStorage instance;
-
-    private List<User> users = new ArrayList<>();
-    private List<Course> courses = new ArrayList<>();
+    private List<Course> courses;
+    private List<News> news;
+    private List<Request> requests;
+    private Vector<User> users = new Vector<User>();
 
     private DataStorage() {}
 
     public static DataStorage getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new DataStorage();
         }
         return instance;
@@ -23,16 +25,21 @@ public class DataStorage {
     public void addUser(User user) {
         users.add(user);
     }
+    
+    public void removeUser(User user) { 
+    	users.remove(user); 
+    	}
+    public void addCourse(Course c) { 
+    	courses.add(c);
+    	}
+    public void addNews(News n) { 
+    	news.add(n);
+    	}
+    public void addRequest(Request r){ 
+    	requests.add(r); 
+    	}
 
-    public List<User> getUsers() {
+    public Vector<User> getUsers() {
         return users;
-    }
-
-    public void addCourse(Course course) {
-        courses.add(course);
-    }
-
-    public List<Course> getCourses() {
-        return courses;
     }
 }

@@ -1,5 +1,12 @@
 package model.comparators;
 
-public class StudentNameComparator {
+import java.util.Comparator;
+import model.users.Student;
 
+public class StudentNameComparator implements Comparator<Student> {
+
+    @Override
+    public int compare(Student s1, Student s2) {
+        return s1.toString().compareTo(s2.toString());
+    }
 }

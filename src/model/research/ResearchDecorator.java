@@ -6,88 +6,82 @@ import java.util.*;
 
 public class ResearchDecorator implements Researcher {
 
-    private final User user;
-    private final List<ResearchPaper> papers;
-    private final List<ResearchProject> projects;
+    private List<ResearchPaper> papers;
+    private List<ResearchProject> projects;
+    private User user;
+    private Journal journal;
 
     public ResearchDecorator(User user) {
-        this.user = user;
-        this.papers = new ArrayList<>();
+        this.user     = user;
+        this.papers   = new ArrayList<>();
         this.projects = new ArrayList<>();
     }
 
     @Override
     public int calculateHIndex() {
         List<Integer> citations = new ArrayList<>();
-
         for (ResearchPaper p : papers) {
             citations.add(p.getCitations());
         }
-
         citations.sort(Collections.reverseOrder());
-
         int h = 0;
-
         for (int i = 0; i < citations.size(); i++) {
-            if (citations.get(i) >= i + 1) {
-                h = i + 1;
-            } else {
-                break;
-            }
+            if (citations.get(i) >= i + 1) h = i + 1;
+            else break;
         }
-
         return h;
     }
 
     @Override
-    public void printPapers(Comparator<ResearchPaper> comparator) {
+    public void printPapers(Comparator<ResearchPaper> c) {
         List<ResearchPaper> sorted = new ArrayList<>(papers);
-
-        if (comparator != null) {
-            sorted.sort(comparator);
-        } else {
-            Collections.sort(sorted);
-        }
-
-        System.out.println("Papers of " + user + ":");
-
+        if (c != null) sorted.sort(c);
+        else Collections.sort(sorted);
+        System.out.println("Papers of " + user + " (h-index=" + calculateHIndex() + "):");
         for (ResearchPaper p : sorted) {
             System.out.println("  " + p);
         }
     }
 
     @Override
-    public void publishPaper(ResearchPaper paper) {
-        papers.add(paper);
-        System.out.println("[News] " + user + " published: " + paper.getTitle());
+    public void publishPaper(ResearchPaper p) {
+        papers.add(p);
+        System.out.println("[Research] " + user + " published: " + p.getTitle());
+        if (journal != null) {
+            journal.publishPaper(p);
+        }
     }
 
-    @Override
-    public void joinProject(ResearchProject project) throws NotResearcherException {
-        project.addParticipant(user);
+    public void addPaper(ResearchPaper paper) {
+        papers.add(paper);
+    }
+
+    public void joinProject(ResearchProject project) {
+        project.addParticipant(this);
         projects.add(project);
     }
 
-    @Override
-    public List<ResearchPaper> getPapers() {
-        return Collections.unmodifiableList(papers);
-    }
-
-    @Override
-    public List<ResearchProject> getProjects() {
-        return Collections.unmodifiableList(projects);
-    }
-
-    public User getUser() {
-        return user;
+    public void setJournal(Journal journal) {
+        this.journal = journal;
     }
 
     @Override
     public String toString() {
-        return "ResearchDecorator{" +
-                "user=" + user +
-                ", papers=" + papers.size() +
-                ", hIndex=" + calculateHIndex() +
-                '}';
+        return getClass().getSimpleName()
+                + "[user=" + user
+                + ", papers=" + papers.size()
+                + ", hIndex=" + calculateHIndex() + "]";
     }
+
+    public User getUser() { 
+    	return user; 
+    	}
+    
+    public List<ResearchPaper> getPapers() { 
+    	return Collections.unmodifiableList(papers); 
+    	}
+    
+    public List<ResearchProject> getProjects() { 
+    	return Collections.unmodifiableList(projects); 
+    	}
 }
