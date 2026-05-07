@@ -1,7 +1,7 @@
 package model.research;
 
-import model.observer.Observable;
-import model.observer.Observer;
+import model.patterns.Observable;
+import model.patterns.Observer;
 import model.users.User;
 import java.util.*;
 
@@ -12,8 +12,8 @@ public class Journal implements Observable {
     private List<User> subscribers;
 
     public Journal(String name) {
-        this.name        = name;
-        this.papers      = new ArrayList<>();
+        this.name = name;
+        this.papers = new ArrayList<>();
         this.subscribers = new ArrayList<>();
     }
 
@@ -63,7 +63,15 @@ public class Journal implements Observable {
                 + ", subscribers=" + subscribers.size() + "]";
     }
 
-    public String getName() { return name; }
-    public List<ResearchPaper> getPapers() { return Collections.unmodifiableList(papers); }
-    public List<User> getSubscribers() { return Collections.unmodifiableList(subscribers); }
+    public String getName() { 
+    	return name; 
+    	}
+   
+    public List<ResearchPaper> getPapers() { 
+    	return Collections.unmodifiableList(papers); 
+    	}
+    
+    public List<User> getSubscribers() { 
+    	return Collections.unmodifiableList(subscribers); 
+    	}
 }

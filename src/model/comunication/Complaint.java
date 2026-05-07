@@ -51,9 +51,19 @@ public class Complaint {
         return Objects.hash(student, head);
     }
 
-    public Student getStudent() { return student; }
-    public Teacher getHead() { return head; }
-    public UrgencyLevel getUrgency() { return urgency; }
-    public String getReason() { return reason; }
-    public boolean isSigned() { return isSigned; }
+    public Student getStudent() { 
+    	return student; 
+    	}
+    public Teacher getHead() { 
+    	return head; 
+    	}
+    public UrgencyLevel getUrgency() { 
+    	return urgency;
+    	}
+    public String getReason() {
+    	return reason; 
+    	}
+    public boolean isSigned() { 
+    	return isSigned; 
+    	}
 }

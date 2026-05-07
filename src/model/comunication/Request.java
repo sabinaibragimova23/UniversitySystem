@@ -47,8 +47,16 @@ public class Request {
         return Objects.hash(description, author, date);
     }
 
-    public String getDescription() { return description; }
-    public RequestStatus getStatus() { return status; }
-    public Employee getAuthor() { return author; }
-    public Date getDate() { return date; }
+    public String getDescription() { 
+    	return description; 
+    	}
+    public RequestStatus getStatus() { 
+    	return status; 
+    	}
+    public Employee getAuthor() { 
+    	return author; 
+    	}
+    public Date getDate() { 
+    	return date; 
+    	}
 }

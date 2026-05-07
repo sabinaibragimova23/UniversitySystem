@@ -65,7 +65,7 @@ public class Course {
     public void setMajor(String major) { this.major = major; }
     public int getYear() { return year; }
     public void setYear(int year) { this.year = year; }
-    public List<Teacher> getInstructors() { return Collections.unmodifiableList(instructors); }
+    public List<Teacher> getTeachers() { return Collections.unmodifiableList(teachers); }
     public List<Student> getStudents() { return Collections.unmodifiableList(students); }
     public List<Lesson> getLessons() { return Collections.unmodifiableList(lessons); }
 }

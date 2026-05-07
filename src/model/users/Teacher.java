@@ -48,14 +48,12 @@ public class Teacher extends Employee {
     }
 
     public void generateReport() {
-        System.out.println("=== Report by " + this + " ===");
+        System.out.println("Report by " + this );
         for (Course c : courses) {
             System.out.println("  " + c.getName() + ": " + c.getStudents().size() + " students");
         }
     }
     
-
-
 
     public void assignCourse(Course course) {
         if (!courses.contains(course)) {

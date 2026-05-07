@@ -1,6 +1,8 @@
 package model.users;
 import java.io.Serializable;
-import model.observer.Observer;
+
+import model.patterns.Observer;
+import model.research.ResearchDecorator;
 import java.util.*;
 
 public abstract class User implements Serializable, Observer {
@@ -10,6 +12,7 @@ public abstract class User implements Serializable, Observer {
     protected String password;
     protected String firstName;
     protected String lastName;
+    protected ResearchDecorator researchProfile;
     
     private List<String> notifications = new ArrayList<>();
 

@@ -1,6 +1,5 @@
 package model.research;
 
-import model.exceptions.NotResearcherException;
 import model.users.User;
 import java.util.*;
 
@@ -12,8 +11,8 @@ public class ResearchDecorator implements Researcher {
     private Journal journal;
 
     public ResearchDecorator(User user) {
-        this.user     = user;
-        this.papers   = new ArrayList<>();
+        this.user = user;
+        this.papers = new ArrayList<>();
         this.projects = new ArrayList<>();
     }
 

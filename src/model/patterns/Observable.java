@@ -1,5 +1,4 @@
-package model.observer;
-
+package model.patterns;
 
 public interface Observable {
     void addObserver(Observer o);

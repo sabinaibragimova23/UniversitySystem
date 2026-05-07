@@ -1,11 +1,11 @@
 package model.users;
 
-import java.util.Vector;
 import model.academic.Course;
 import model.academic.Mark;
 import model.academic.Transcript;
 import model.exceptions.CreditLimitException;
 import model.research.Journal;
+import model.research.ResearchDecorator;
 import java.util.*;
 
 public class Student extends User {
@@ -15,6 +15,7 @@ public class Student extends User {
     private StudentOrganization organization;
     private List<Journal> subscribedJournals;
     private Transcript transcript;
+    private ResearchDecorator researchProfile;
 
     public Student(int id, String name, String email, String password) {
         super(id, name, email, password);
@@ -57,6 +58,20 @@ public class Student extends User {
         for (int i = 0; i < marks.size(); i++) {
             System.out.println(marks.get(i));
         }
+    }
+    
+    public void becomeResearcher() {
+        if (researchProfile == null) {
+            researchProfile = new ResearchDecorator(this);
+        }
+    }
+
+    public boolean isResearcher() {
+        return researchProfile != null;
+    }
+
+    public Optional<ResearchDecorator> getResearchProfile() {
+        return Optional.ofNullable(researchProfile);
     }
     
     public void subscribeToJournal(Journal journal) {

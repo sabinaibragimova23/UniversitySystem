@@ -5,40 +5,104 @@ import java.util.*;
 public class Transcript {
 
     private Map<Course, Mark> records;
+
     private double gpa;
-    private Course course;
 
     public Transcript() {
+
         this.records = new LinkedHashMap<>();
     }
 
-    public void addMark(Course course, Mark mark) {
+    public void addMark(
+            Course course,
+            Mark mark
+    ) {
+
         records.put(course, mark);
+
         this.gpa = calculateGPA();
     }
 
     public double calculateGPA() {
-        if (records.isEmpty()) return 0.0;
-        double total = 0;
-        for (Mark m : records.values()) total += m.getTotal();
-        return Math.round((total / records.size() / 10.0) * 100.0) / 100.0;
+
+        if (records.isEmpty()) {
+
+            return 0.0;
+        }
+
+        double totalPoints = 0.0;
+
+        int totalCredits = 0;
+
+        for (Map.Entry<Course, Mark> entry
+                : records.entrySet()) {
+
+            Course course = entry.getKey();
+
+            Mark mark = entry.getValue();
+
+            totalPoints +=
+                    mark.getGradePoints()
+                    * course.getCredits();
+
+            totalCredits +=
+                    course.getCredits();
+        }
+
+        if (totalCredits == 0) {
+
+            return 0.0;
+        }
+
+        return Math.round(
+                (totalPoints / totalCredits)
+                * 100.0
+        ) / 100.0;
     }
 
     public void print() {
+
         System.out.println("Transcript:");
-        records.forEach((c, m) ->
-                System.out.printf("  %-30s %s%n", c.getName(), m));
-        System.out.printf("  GPA: %.2f%n", calculateGPA());
+
+        for (Map.Entry<Course, Mark> entry
+                : records.entrySet()) {
+
+            Course course = entry.getKey();
+
+            Mark mark = entry.getValue();
+
+            System.out.println(
+                    course.getName()
+                    + " | "
+                    + mark.getGrade()
+                    + " | GPA points: "
+                    + mark.getGradePoints()
+            );
+        }
+
+        System.out.println(
+                "GPA: "
+                + calculateGPA()
+        );
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName()
-                + "[records=" + records.size()
-                + ", gpa=" + calculateGPA() + "]";
+
+        return "Transcript[gpa="
+                + calculateGPA()
+                + "]";
     }
 
-    public Map<Course, Mark> getRecords() { return Collections.unmodifiableMap(records); }
-    public double getGpa()                { return gpa; }
-    public Course getCourse()             { return course; }
+    public Map<Course, Mark> getRecords() {
+
+        return Collections.unmodifiableMap(
+                records
+        );
+    }
+
+    public double getGpa() {
+
+        return gpa;
+    }
 }

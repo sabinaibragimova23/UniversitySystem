@@ -11,10 +11,10 @@ public class Message {
     private Date date;
 
     public Message(User sender, User receiver, String content) {
-        this.sender   = sender;
+        this.sender = sender;
         this.receiver = receiver;
-        this.content  = content;
-        this.date     = new Date();
+        this.content = content;
+        this.date = new Date();
     }
 
     public void send() {
@@ -46,8 +46,16 @@ public class Message {
         return Objects.hash(sender, receiver, date);
     }
 
-    public User getSender() { return sender; }
-    public User getReceiver() { return receiver; }
-    public String getContent() { return content; }
-    public Date getDate() { return date; }
+    public User getSender() { 
+    	return sender; 
+    	}
+    public User getReceiver() { 
+    	return receiver; 
+    	}
+    public String getContent() { 
+    	return content; 
+    	}
+    public Date getDate() {
+    	return date; 
+    	}
 }

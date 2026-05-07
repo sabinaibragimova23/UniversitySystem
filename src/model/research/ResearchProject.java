@@ -1,10 +1,11 @@
 package model.research;
 
 import model.exceptions.NotResearcherException;
-
-import model.users.User;
-import java.util.*;
 import model.users.Teacher;
+import model.users.GraduateStudent;
+
+import java.util.*;
+
 public class ResearchProject {
 
     private String topic;
@@ -19,23 +20,39 @@ public class ResearchProject {
         this.status = "NEW";
     }
 
+    public void addParticipant(ResearchDecorator rd) {
+        if (rd == null) return;
 
-    public void addParticipant(User user) throws NotResearcherException {
-        if (!(user instanceof Researcher)) {
-            throw new NotResearcherException(user.toString());
+        participants.add(rd);
+
+        System.out.println("[ResearchProject] "
+                + rd.getUser() + " joined '" + topic + "'");
+    }
+
+
+    public void addParticipant(Teacher teacher) throws NotResearcherException {
+
+        if (!teacher.isResearcher()) {
+            throw new NotResearcherException(teacher.toString());
         }
 
-        participants.add((Researcher) user);
+        teacher.getResearchProfile()
+                .ifPresent(this::addParticipant);
+    }
+    
+    public void addParticipant(model.users.Student student) {
+        ResearchDecorator rd = new ResearchDecorator(student);
+
+        addParticipant(rd);
     }
 
-    public void addPaper(ResearchPaper paper) {
-        papers.add(paper);
+
+    public void addParticipant(GraduateStudent student) {
+
+        student.getResearchProfile()
+                .ifPresent(this::addParticipant);
     }
-    
-    public void addParticipant(Researcher researcher) {
-        participants.add(researcher);
-    }
-    
+
     public String getStatus() {
         return status;
     }
@@ -43,6 +60,7 @@ public class ResearchProject {
     public void setStatus(String status) {
         this.status = status;
     }
+
 
     @Override
     public String toString() {
@@ -52,7 +70,6 @@ public class ResearchProject {
                 ", papers=" + papers.size() +
                 '}';
     }
-
 
     public String getTopic() {
         return topic;

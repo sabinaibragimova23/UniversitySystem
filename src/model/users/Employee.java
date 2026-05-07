@@ -1,6 +1,6 @@
 package model.users;
 
-public class Employee extends User {
+public  abstract class Employee extends User {
 
     protected String employeeId;
     protected String department;

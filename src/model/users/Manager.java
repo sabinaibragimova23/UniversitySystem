@@ -17,7 +17,7 @@ public class Manager extends Employee {
     private boolean isPinned;
 
     public Manager(int id, String login, String email, String employeeId, String password,
-                   String firstName, String lastName, ManagerType type) {
+                   String firstName, String lastName, ManagerType type, String department) {
     	super(id, firstName + " " + lastName, email, password, employeeId, department);
 
         this.type = type;
@@ -44,7 +44,7 @@ public class Manager extends Employee {
 
     
     public String createReport() {
-        StringBuilder sb = new StringBuilder("=== Academic Report ===\n");
+        StringBuilder sb = new StringBuilder("Academic Report:\n");
         DataStorage.getInstance().getUsers().stream()
             .filter(u -> u instanceof Student)
             .map(u -> (Student) u)
@@ -74,7 +74,6 @@ public class Manager extends Employee {
 
 
     public List<Request> viewRequests() {
-
     }
 
     @Override
@@ -82,7 +81,13 @@ public class Manager extends Employee {
         return "Manager{'" + firstName + " " + lastName + "', " + type + "}";
     }
 
-    public ManagerType getManagerType() { return type; }
-    public List<Student> getManagedStudents()  { return managedStudents; }
-    public boolean isPinned() { return isPinned; }
+    public ManagerType getManagerType() { 
+    	return type; 
+    	}
+    public List<Student> getManagedStudents()  { 
+    	return managedStudents; 
+    	}
+    public boolean isPinned() {
+    	return isPinned; 
+    	}
 }
