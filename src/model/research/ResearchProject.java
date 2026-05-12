@@ -1,56 +1,60 @@
 package model.research;
 
-import model.exceptions.NotResearcherException;
-import model.users.Teacher;
+import core.DataStorage;
 import model.users.GraduateStudent;
+import model.users.Teacher;
+import model.exceptions.NotResearcherException;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
-public class ResearchProject {
-
+public class ResearchProject implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String topic;
+    private List<ResearchDecorator> participants;
     private List<ResearchPaper> papers;
-    private List<Researcher> participants;
     private String status;
 
     public ResearchProject(String topic) {
         this.topic = topic;
-        this.papers = new ArrayList<>();
         this.participants = new ArrayList<>();
+        this.papers = new ArrayList<>();
         this.status = "NEW";
     }
 
-    public void addParticipant(ResearchDecorator rd) {
-        if (rd == null) return;
-
-        participants.add(rd);
-
-        System.out.println("[ResearchProject] "
-                + rd.getUser() + " joined '" + topic + "'");
+    public void addParticipant(ResearchDecorator researcher) {
+        if (!participants.contains(researcher)) {
+            participants.add(researcher);
+            DataStorage.getInstance().registerResearcher(researcher);
+            System.out.println(
+                    "[ResearchProject] "
+                    + researcher.getUser()
+                    + " joined "
+                    + topic
+            );
+        }
     }
 
-
     public void addParticipant(Teacher teacher) throws NotResearcherException {
-
         if (!teacher.isResearcher()) {
             throw new NotResearcherException(teacher.toString());
         }
-
-        teacher.getResearchProfile()
-                .ifPresent(this::addParticipant);
+        addParticipant(teacher.getResearchProfile());
     }
-    
-    public void addParticipant(model.users.Student student) {
-        ResearchDecorator rd = new ResearchDecorator(student);
-
-        addParticipant(rd);
-    }
-
 
     public void addParticipant(GraduateStudent student) {
+        addParticipant(student.getResearchProfile());
+    }
 
-        student.getResearchProfile()
-                .ifPresent(this::addParticipant);
+    public void addPaper(ResearchPaper paper) {
+        papers.add(paper);
+    }
+
+    public String getTopic() {
+        return topic;
     }
 
     public String getStatus() {
@@ -61,25 +65,39 @@ public class ResearchProject {
         this.status = status;
     }
 
-
-    @Override
-    public String toString() {
-        return "ResearchProject{" +
-                "topic='" + topic + '\'' +
-                ", participants=" + participants.size() +
-                ", papers=" + papers.size() +
-                '}';
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
     public List<ResearchPaper> getPapers() {
         return Collections.unmodifiableList(papers);
     }
 
-    public List<Researcher> getParticipants() {
+    public List<ResearchDecorator> getParticipants() {
         return Collections.unmodifiableList(participants);
+    }
+
+    @Override
+    public String toString() {
+
+        return "ResearchProject[topic="
+                + topic
+                + ", participants="
+                + participants.size()
+                + ", papers="
+                + papers.size()
+                + ", status="
+                + status
+                + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(topic);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof ResearchProject))
+            return false;
+        ResearchProject r = (ResearchProject) o;
+        return Objects.equals(topic, r.topic);
     }
 }

@@ -1,11 +1,17 @@
 package model.research;
 
-import model.patterns.Observable;
-import model.patterns.Observer;
 import model.users.User;
-import java.util.*;
+import models.observer.Observable;
+import models.observer.Observer;
 
-public class Journal implements Observable {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Journal implements Observable, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private List<ResearchPaper> papers;
@@ -20,7 +26,13 @@ public class Journal implements Observable {
     public void subscribe(User user) {
         if (!subscribers.contains(user)) {
             subscribers.add(user);
-            System.out.println("[Journal: " + name + "] " + user + " subscribed.");
+            System.out.println(
+                    "[Journal: "
+                    + name
+                    + "] "
+                    + user
+                    + " subscribed."
+            );
         }
     }
 
@@ -30,7 +42,10 @@ public class Journal implements Observable {
 
     public void publishPaper(ResearchPaper paper) {
         papers.add(paper);
-        notifyObservers("NewPaper", paper);
+        notifyObservers(
+                "NewPaper in " + name,
+                paper.getTitle()
+        );
     }
 
     @Override
@@ -55,23 +70,26 @@ public class Journal implements Observable {
         }
     }
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName()
-                + "[name=" + name
-                + ", papers=" + papers.size()
-                + ", subscribers=" + subscribers.size() + "]";
+    public String getName() {
+        return name;
     }
 
-    public String getName() { 
-    	return name; 
-    	}
-   
-    public List<ResearchPaper> getPapers() { 
-    	return Collections.unmodifiableList(papers); 
-    	}
-    
-    public List<User> getSubscribers() { 
-    	return Collections.unmodifiableList(subscribers); 
-    	}
+    public List<ResearchPaper> getPapers() {
+        return Collections.unmodifiableList(papers);
+    }
+
+    public List<User> getSubscribers() {
+        return Collections.unmodifiableList(subscribers);
+    }
+
+    @Override
+    public String toString() {
+        return "Journal[name="
+                + name
+                + ", papers="
+                + papers.size()
+                + ", subscribers="
+                + subscribers.size()
+                + "]";
+    }
 }

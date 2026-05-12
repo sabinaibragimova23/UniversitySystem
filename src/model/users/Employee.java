@@ -1,27 +1,34 @@
 package model.users;
 
-public  abstract class Employee extends User {
+import model.comunication.Message;
+
+import java.io.Serializable;
+
+public abstract class Employee extends User implements Serializable {
+    public Employee(int id2, String login2, String password2, String firstName2, String lastName2) {
+		super(id2, login2, password2, firstName2, lastName2);
+	}
+
+	private static final long serialVersionUID = 1L;
 
     protected String employeeId;
     protected String department;
+    @Override
+    public void sendMessage(User receiver, String content) {
+        Message msg = new Message(this, receiver, content);
 
-    public Employee(int id, String name, String email, String password,
-                    String employeeId, String department) {
-
-        super(id, name, email, password);
-
-        this.employeeId = employeeId;
-        this.department = department;
+        msg.send();
     }
 
-    public void sendMessage(Employee other, String text) {
-        System.out.println(this.name + " sends message to " + other.getName() + ": " + text);
+    public String getEmployeeId() {
+        return employeeId;
     }
 
-    public String getEmployeeId() { return employeeId; }
-    public String getDepartment() { return department; }
+    public String getDepartment() {
+        return department;
+    }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setDepartment(String dept) {
+        this.department = dept;
     }
 }

@@ -1,8 +1,11 @@
 package model.enums;
-
 public enum Language {
-	RU,
-	EN,
-	KZ
-
+    KZ, EN, RU;
+    public String getGreeting() {
+        switch (this) {
+            case KZ: return "Сәлем!";
+            case RU: return "Привет!";
+            default: return "Hello!";
+        }
+    }
 }

@@ -1,10 +1,17 @@
 package model.research;
 
 import model.enums.CitationFormat;
-import java.util.*;
 
-public class ResearchPaper implements Comparable<ResearchPaper> {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
+public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
+    private static final long serialVersionUID = 1L;
     private String title;
     private List<String> authors;
     private String journal;
@@ -13,8 +20,13 @@ public class ResearchPaper implements Comparable<ResearchPaper> {
     private Date date;
     private String doi;
 
-    public ResearchPaper(String title, List<String> authors, String journal,
-                         int pages, Date date, String doi) {
+    public ResearchPaper(String title,
+                         List<String> authors,
+                         String journal,
+                         int pages,
+                         Date date,
+                         String doi) {
+
         this.title = title;
         this.authors = new ArrayList<>(authors);
         this.journal = journal;
@@ -26,30 +38,64 @@ public class ResearchPaper implements Comparable<ResearchPaper> {
 
     public String getCitation(CitationFormat format) {
         int year = getYear();
-
         if (format == CitationFormat.PLAINTEXT) {
-            return String.join(", ", authors) + " (" + year + "). "
-                    + title + ". " + journal + ", " + pages + " pp. DOI: " + doi;
+            return String.join(", ", authors)
+                    + " ("
+                    + year
+                    + "). "
+                    + title
+                    + ". "
+                    + journal
+                    + ", "
+                    + pages
+                    + " pp. DOI: "
+                    + doi;
         }
 
-        String key = (authors.isEmpty() ? "Unknown"
-                : authors.get(0).split(" ")[0]) + year;
+        String key;
+        if (authors.isEmpty()) {
+            key = "Unknown" + year;
+        } else {
+            key = authors.get(0).split(" ")[0] + year;
+        }
 
-        return "@article{" + key + ",\n" +
-                "  author  = {" + String.join(" and ", authors) + "},\n" +
-                "  title   = {" + title + "},\n" +
-                "  journal = {" + journal + "},\n" +
-                "  year    = {" + year + "},\n" +
-                "  pages   = {" + pages + "},\n" +
-                "  doi     = {" + doi + "}\n}";
+        return "@article{"
+                + key
+                + ",\n"
+                + "  author  = {"
+                + String.join(" and ", authors)
+                + "},\n"
+                + "  title   = {"
+                + title
+                + "},\n"
+                + "  journal = {"
+                + journal
+                + "},\n"
+                + "  year    = {"
+                + year
+                + "},\n"
+                + "  pages   = {"
+                + pages
+                + "},\n"
+                + "  doi     = {"
+                + doi
+                + "}\n}";
     }
 
     public void addCitation() {
         citations++;
     }
 
+    public void setCitations(int citations) {
+        if (citations >= 0) {
+            this.citations = citations;
+        }
+    }
+
     public int getYear() {
-        if (date == null) return 0;
+        if (date == null) {
+            return 0;
+        }
 
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -61,38 +107,8 @@ public class ResearchPaper implements Comparable<ResearchPaper> {
         return Integer.compare(other.citations, this.citations);
     }
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() +
-                "[title=" + title +
-                ", authors=" + authors +
-                ", journal=" + journal +
-                ", citations=" + citations +
-                ", pages=" + pages +
-                ", year=" + getYear() +
-                ", doi=" + doi + "]";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ResearchPaper)) return false;
-
-        ResearchPaper that = (ResearchPaper) o;
-        return Objects.equals(doi, that.doi);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(doi);
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public List<String> getAuthors() {
@@ -107,10 +123,6 @@ public class ResearchPaper implements Comparable<ResearchPaper> {
         return journal;
     }
 
-    public void setJournal(String journal) {
-        this.journal = journal;
-    }
-
     public int getCitations() {
         return citations;
     }
@@ -119,19 +131,43 @@ public class ResearchPaper implements Comparable<ResearchPaper> {
         return pages;
     }
 
-    public void setPages(int pages) {
-        this.pages = pages;
-    }
-
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public String getDoi() {
         return doi;
+    }
+
+    @Override
+    public String toString() {
+
+        return "ResearchPaper[title="
+                + title
+                + ", authors="
+                + authors
+                + ", journal="
+                + journal
+                + ", citations="
+                + citations
+                + ", pages="
+                + pages
+                + ", year="
+                + getYear()
+                + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(doi);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof ResearchPaper))
+            return false;
+        ResearchPaper r = (ResearchPaper) o;
+        return Objects.equals(doi, r.doi);
     }
 }

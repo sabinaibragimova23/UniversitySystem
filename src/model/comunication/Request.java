@@ -1,11 +1,15 @@
 package model.comunication;
 
-import model.enums.RequestStatus;
 import model.users.Employee;
+import model.enums.RequestStatus;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Request {
+public class Request implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String description;
     private RequestStatus status;
@@ -20,43 +24,49 @@ public class Request {
     }
 
     public void updateStatus(RequestStatus newStatus) {
+
         this.status = newStatus;
-        System.out.println("[Request] Status → " + newStatus + ": " + description);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public RequestStatus getStatus() {
+        return status;
+    }
+
+    public Employee getAuthor() {
+        return author;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName()
-                + "[description=" + description
-                + ", status=" + status
-                + ", author=" + author + "]";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Request)) return false;
-        Request r = (Request) o;
-        return Objects.equals(description, r.description)
-                && Objects.equals(author, r.author)
-                && Objects.equals(date, r.date);
+        return "Request[description="
+                + description
+                + ", status="
+                + status
+                + ", author="
+                + author
+                + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, author, date);
+        return Objects.hash(description, author);
     }
 
-    public String getDescription() { 
-    	return description; 
-    	}
-    public RequestStatus getStatus() { 
-    	return status; 
-    	}
-    public Employee getAuthor() { 
-    	return author; 
-    	}
-    public Date getDate() { 
-    	return date; 
-    	}
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof Request))
+            return false;
+        Request r = (Request) o;
+        return Objects.equals(description, r.description)
+                && Objects.equals(author, r.author);
+    }
 }

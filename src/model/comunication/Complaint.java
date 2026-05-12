@@ -1,11 +1,15 @@
 package model.comunication;
 
-import model.enums.UrgencyLevel;
 import model.users.Student;
 import model.users.Teacher;
+import model.enums.UrgencyLevel;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Complaint {
+public class Complaint implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Student student;
     private Teacher head;
@@ -13,8 +17,11 @@ public class Complaint {
     private String reason;
     private boolean isSigned;
 
-    public Complaint(Student student, Teacher head,
-                     UrgencyLevel urgency, String reason) {
+    public Complaint(Student student,
+                     Teacher head,
+                     UrgencyLevel urgency,
+                     String reason) {
+
         this.student = student;
         this.head = head;
         this.urgency = urgency;
@@ -23,27 +30,51 @@ public class Complaint {
     }
 
     public void sign() {
-        this.isSigned = true;
-        System.out.println("[Complaint] Signed by " + head
-                + " about " + student + " [" + urgency + "]");
+
+        isSigned = true;
+
+        System.out.println(
+                "[Complaint] Signed by "
+                + head
+                + " about "
+                + student
+                + " ["
+                + urgency
+                + "]"
+        );
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public Teacher getHead() {
+        return head;
+    }
+
+    public UrgencyLevel getUrgency() {
+        return urgency;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public boolean isSigned() {
+        return isSigned;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName()
-                + "[student=" + student
-                + ", urgency=" + urgency
-                + ", signed=" + isSigned
-                + ", reason=" + reason + "]";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Complaint)) return false;
-        Complaint c = (Complaint) o;
-        return Objects.equals(student, c.student)
-                && Objects.equals(head, c.head);
+        return "Complaint[student="
+                + student
+                + ", urgency="
+                + urgency
+                + ", signed="
+                + isSigned
+                + ", reason="
+                + reason
+                + "]";
     }
 
     @Override
@@ -51,19 +82,13 @@ public class Complaint {
         return Objects.hash(student, head);
     }
 
-    public Student getStudent() { 
-    	return student; 
-    	}
-    public Teacher getHead() { 
-    	return head; 
-    	}
-    public UrgencyLevel getUrgency() { 
-    	return urgency;
-    	}
-    public String getReason() {
-    	return reason; 
-    	}
-    public boolean isSigned() { 
-    	return isSigned; 
-    	}
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof Complaint))
+            return false;
+        Complaint c = (Complaint) o;
+        return student.equals(c.student)
+                && head.equals(c.head);
+    }
 }

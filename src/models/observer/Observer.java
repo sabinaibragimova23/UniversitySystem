@@ -1,4 +1,4 @@
-package model.patterns;
+package models.observer;
 
 
 public interface Observer {

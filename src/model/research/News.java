@@ -1,4 +1,4 @@
-package model.comunication;
+package model.research;
 
 import java.util.*;
 

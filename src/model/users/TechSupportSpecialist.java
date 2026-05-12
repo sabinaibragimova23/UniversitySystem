@@ -1,23 +1,29 @@
 package model.users;
 
 import model.comunication.Request;
+import model.enums.Language;
 import model.enums.RequestStatus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TechSupportSpecialist extends Employee {
-
-    private List<Request> requests = new ArrayList<>();
-
+    private List<Request> requests;
     public TechSupportSpecialist(int id,
-                                 String firstName,
-                                 String lastName,
-                                 String email,
-                                 String password,
-                                 String employeeId,
-                                 String department) {
+                                  String login,
+                                  String password,
+                                  String firstName,
+                                  String lastName) {
 
-        super(id, firstName + " " + lastName, email, password, employeeId, department);
+    	super(id,
+    	          login,
+    	          password,
+    	          firstName,
+    	          lastName);
+
+        this.language = Language.EN;
+        this.requests = new ArrayList<>();
     }
 
     public void addRequest(Request request) {
@@ -37,18 +43,32 @@ public class TechSupportSpecialist extends Employee {
         updateStatus(request, RequestStatus.DONE);
     }
 
-    public void updateStatus(Request request, RequestStatus status) {
+    public void updateStatus(Request request,
+                             RequestStatus status) {
         request.updateStatus(status);
-        System.out.println("[TechSupport] " + status + ": " + request);
-    }
-
-    public String getInfo() {
-        return "TechSupport{name='" + name +
-                "', requests=" + requests.size() + "}";
+        System.out.println(
+                "[TechSupport] "
+                        + status
+                        + ": "
+                        + request.getDescription()
+        );
     }
 
     public void viewRequests() {
-        requests.forEach(System.out::println);
+        System.out.println("Tech Support Requests");
+        for (Request r : requests) {
+            System.out.println("  " + r);
+        }
+    }
+
+    public String getInfo() {
+        return "TechSupport{'"
+                + firstName
+                + " "
+                + lastName
+                + "', requests="
+                + requests.size()
+                + "}";
     }
 
     @Override

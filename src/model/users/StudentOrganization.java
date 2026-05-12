@@ -9,7 +9,7 @@ public class StudentOrganization {
     private List<Student> members;
 
     public StudentOrganization(String name) {
-        this.name    = name;
+        this.name = name;
         this.members = new ArrayList<>();
     }
 

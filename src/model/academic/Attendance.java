@@ -1,10 +1,14 @@
 package model.academic;
 
 import model.users.Student;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Attendance {
+public class Attendance implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Lesson lesson;
     private Student student;
@@ -18,29 +22,49 @@ public class Attendance {
         this.date = new Date();
     }
 
-    public static void markAt(Lesson lesson, Student student, boolean presence) {
-        Attendance a = new Attendance(lesson, student, presence);
-        System.out.println("[Attendance] " + student
-                + " — " + lesson.getType()
-                + ": " + (presence ? "present" : "absent"));
+    public static void markAt(Lesson lesson,
+                              Student student,
+                              boolean presence) {
+
+        new Attendance(lesson, student, presence);
+
+        System.out.println(
+                "[Attendance] "
+                + student.getFirstName()
+                + " - "
+                + lesson.getType()
+                + " '"
+                + lesson.getTopic()
+                + "' : "
+                + (presence ? "PRESENT" : "ABSENT")
+        );
+    }
+
+    public Lesson getLesson() {
+        return lesson;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public boolean isPresent() {
+        return isPresent;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName()
-                + "[student=" + student
-                + ", lesson=" + lesson.getType()
-                + ", present=" + isPresent
-                + ", date=" + date + "]";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Attendance)) return false;
-        Attendance a = (Attendance) o;
-        return Objects.equals(lesson, a.lesson)
-                && Objects.equals(student, a.student);
+        return "Attendance[student="
+                + student
+                + ", lesson="
+                + lesson.getType()
+                + ", present="
+                + isPresent
+                + "]";
     }
 
     @Override
@@ -48,16 +72,13 @@ public class Attendance {
         return Objects.hash(lesson, student);
     }
 
-    public Lesson getLesson() { 
-    	return lesson; 
-    	}
-    public Student getStudent() { 
-    	return student; 
-    	}
-    public boolean isPresent() { 
-    	return isPresent; 
-    	}
-    public Date getDate() { 
-    	return date; 
-    	}
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof Attendance))
+            return false;
+        Attendance a = (Attendance) o;
+        return lesson.equals(a.lesson)
+                && student.equals(a.student);
+    }
 }

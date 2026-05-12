@@ -1,93 +1,146 @@
 package model.users;
 
+import core.DataStorage;
 import model.academic.Course;
 import model.academic.Enrollment;
 import model.comunication.Request;
 import model.enums.Language;
 import model.enums.ManagerType;
-import model.comunication.News;
-import model.patterns.DataStorage;
+import model.research.News;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Manager extends Employee {
 
     private ManagerType type;
     private List<Student> managedStudents;
-    private boolean isPinned;
 
-    public Manager(int id, String login, String email, String employeeId, String password,
-                   String firstName, String lastName, ManagerType type, String department) {
-    	super(id, firstName + " " + lastName, email, password, employeeId, department);
+    public Manager(int id,
+                   String login,
+                   String password,
+                   String firstName,
+                   String lastName,
+                   ManagerType type) {
 
-        this.type = type;
+    	super(id,
+    	          login,
+    	          password,
+    	          firstName,
+    	          lastName);
+    	this.type = type;
         this.managedStudents = new ArrayList<>();
     }
 
-   
     public void assignCourse(Course course, Teacher teacher) {
+
         teacher.assignCourse(course);
         course.addTeacher(teacher);
-        System.out.println("[Manager] " + teacher + " assigned to " + course);
+
+        System.out.println(
+                "[Manager] "
+                + teacher.getFirstName()
+                + " assigned to "
+                + course.getName()
+        );
     }
 
     public void approveRegistration(Enrollment enrollment) {
         enrollment.approve();
     }
 
-    public void addCourseForReg(Course course, String major, int year) {
+    public void addCourseForReg(Course course,
+                                String major,
+                                int year) {
+
         course.setMajor(major);
         course.setYear(year);
+
         DataStorage.getInstance().addCourse(course);
-        System.out.println("[Manager] Added for registration: " + course);
+        System.out.println(
+                "[Manager] Added for registration: "
+                + course
+        );
     }
 
-    
     public String createReport() {
-        StringBuilder sb = new StringBuilder("Academic Report:\n");
-        DataStorage.getInstance().getUsers().stream()
-            .filter(u -> u instanceof Student)
-            .map(u -> (Student) u)
-            .sorted()
-            .forEach(s -> sb.append("  ").append(s).append("\n"));
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== Academic Performance Report ===\n");
+        DataStorage.getInstance()
+                .getUsers()
+                .stream()
+                .filter(u -> u instanceof Student)
+                .map(u -> (Student) u)
+                .sorted()
+                .forEach(s -> sb.append("  ").append(s).append("\n"));
+
         System.out.print(sb);
         return sb.toString();
     }
 
-
     public void manageNews(News news) {
         DataStorage.getInstance().addNews(news);
-        System.out.println("[Manager] News published: " + news.getTitle());
+        System.out.println(
+                "[Manager] News published: "
+                + news.getTitle()
+        );
     }
 
-    
     public List<Student> viewStudentsInfo(Comparator<Student> comparator) {
-        List<Student> list = new ArrayList<>(managedStudents);
-        if (comparator != null) list.sort(comparator);
-        list.forEach(s -> System.out.println("  " + s));
+        List<Student> list = DataStorage.getInstance()
+                .getUsers()
+                .stream()
+                .filter(u -> u instanceof Student)
+                .map(u -> (Student) u)
+                .collect(Collectors.toList());
+        if (comparator != null) {
+            list.sort(comparator);
+        }
+
+        for (Student s : list) {
+            System.out.println("  " + s);
+        }
+
         return list;
     }
 
     public void viewTeachersInfo() {
-      
+        DataStorage.getInstance()
+                .getUsers()
+                .stream()
+                .filter(u -> u instanceof Teacher)
+                .forEach(t -> System.out.println("  " + t));
     }
 
-
     public List<Request> viewRequests() {
+        List<Request> requests = DataStorage.getInstance().getRequests();
+        for (Request r : requests) {
+            System.out.println("  " + r);
+        }
+
+        return requests;
+    }
+
+    public ManagerType getManagerType() {
+        return type;
+    }
+
+    public List<Student> getManagedStudents() {
+        return managedStudents;
     }
 
     @Override
     public String toString() {
-        return "Manager{'" + firstName + " " + lastName + "', " + type + "}";
+        return "Manager{'"
+                + firstName
+                + " "
+                + lastName
+                + "', "
+                + type
+                + "}";
     }
 
-    public ManagerType getManagerType() { 
-    	return type; 
-    	}
-    public List<Student> getManagedStudents()  { 
-    	return managedStudents; 
-    	}
-    public boolean isPinned() {
-    	return isPinned; 
-    	}
+    public void setManagerType(ManagerType mtType) {
+        this.type = mtType;
+    }
 }

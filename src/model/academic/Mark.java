@@ -1,9 +1,11 @@
 package model.academic;
 
+import java.io.Serializable;
 import java.util.Objects;
 import model.enums.GradeLetter;
 
-public class Mark {
+public class Mark implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private double firstAttestation;
 
@@ -96,7 +98,7 @@ public class Mark {
             case D_PLUS:
                 return 1.33;
 
-            case F:
+            case D:
                 return 1.0;
 
             default:
