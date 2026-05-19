@@ -1,4 +1,4 @@
-package models.observer;
+package model.observer;
 
 
 public interface Observer {

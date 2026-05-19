@@ -1,14 +1,14 @@
 package controllers;
 
 import core.DataStorage;
-import model.comunication.Request;
-import model.users.Employee;
+import model.users.User;
+import model.communication.Request;
 import model.users.TechSupportSpecialist;
 
 public class TechSupportController {
 
     public static Request createRequest(String description,
-                                        Employee author) {
+                                        User author) {
         Request req = new Request(description, author);
         DataStorage.addRequest(req);
         System.out.println("[TechSupport] Request created: " + description);

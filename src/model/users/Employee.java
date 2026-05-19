@@ -1,8 +1,8 @@
 package model.users;
 
-import model.comunication.Message;
-
 import java.io.Serializable;
+
+import model.communication.Message;
 
 public abstract class Employee extends User implements Serializable {
     public Employee(int id2, String login2, String password2, String firstName2, String lastName2) {

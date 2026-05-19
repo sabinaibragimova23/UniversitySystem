@@ -3,7 +3,7 @@ package model.users;
 import core.DataStorage;
 import model.academic.Course;
 import model.academic.Enrollment;
-import model.comunication.Request;
+import model.communication.Request;
 import model.enums.Language;
 import model.enums.ManagerType;
 import model.research.News;
@@ -35,7 +35,6 @@ public class Manager extends Employee {
     public void assignCourse(Course course, Teacher teacher) {
 
         teacher.assignCourse(course);
-        course.addTeacher(teacher);
 
         System.out.println(
                 "[Manager] "
@@ -131,13 +130,7 @@ public class Manager extends Employee {
 
     @Override
     public String toString() {
-        return "Manager{'"
-                + firstName
-                + " "
-                + lastName
-                + "', "
-                + type
-                + "}";
+        return firstName + " " + lastName + " [Manager, " + type + "]";
     }
 
     public void setManagerType(ManagerType mtType) {

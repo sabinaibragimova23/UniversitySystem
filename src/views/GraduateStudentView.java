@@ -358,27 +358,36 @@ public class GraduateStudentView extends BaseView {
     private static void sendMessageMenu(GraduateStudent student)
             throws IOException {
 
-        System.out.print("Recipient login: ");
+        java.util.List<User> allUsers = DataStorage.getUsers().stream()
+                .filter(u -> u.getLogin() != null
+                        && !u.getLogin().equals(student.getLogin()))
+                .collect(java.util.stream.Collectors.toList());
 
-        String login = reader.readLine().trim();
-
-        System.out.print("Message: ");
-
-        String message = reader.readLine().trim();
-
-        User receiver = DataStorage.getUsers()
-                .stream()
-                .filter(u -> u.getLogin().equals(login))
-                .findFirst()
-                .orElse(null);
-
-        if (receiver == null) {
-
-            errorMsg("User not found.");
+        if (allUsers.isEmpty()) {
+            errorMsg("No other users in the system.");
             return;
         }
 
-        student.sendMessage(receiver, message);
+        System.out.println("USERS:");
+
+        for (int i = 0; i < allUsers.size(); i++) {
+            User u = allUsers.get(i);
+            System.out.println(
+                    (i + 1)
+                    + " - ["
+                    + u.getClass().getSimpleName()
+                    + "] "
+                    + u.getFirstName()
+                    + " "
+                    + u.getLastName()
+            );
+        }
+
+        int ri = readIntRange("Send to: ", 1, allUsers.size());
+
+        String message = readString("Message: ");
+
+        student.sendMessage(allUsers.get(ri - 1), message);
 
         successMsg("Message sent.");
     }

@@ -27,22 +27,51 @@ public class ResearchController {
     }
 
     public static void showTopCited() {
+
         ResearchDecorator top = DataStorage.getTopCitedResearcher();
 
-        if (top != null) {
-
-            System.out.println(
-                    "[Top Cited] "
-                            + top.getUser()
-                            + " | h-index="
-                            + top.calculateHIndex()
-                            + " | papers="
-                            + top.getPapers().size()
-            );
-
-        } else {
-            System.out.println("[Top Cited] No researchers yet.");
+        if (top == null) {
+            System.out.println("No researchers found.");
+            return;
         }
+
+        System.out.println(
+                "Top cited researcher: "
+                + top.getUser()
+                + " | h-index="
+                + top.calculateHIndex()
+                + " | papers="
+                + top.getPapers().size()
+        );
+
+        model.research.News announcement = new model.research.News(
+                "Top Cited: " + top.getUser(),
+                top.getUser() + " is the most cited researcher with h-index="
+                        + top.calculateHIndex(),
+                "Research",
+                new java.util.Date()
+        );
+
+        DataStorage.addNews(announcement);
+    }
+
+    public static void showTopCitedByYear(int year) {
+
+        ResearchDecorator top = DataStorage.getTopCitedResearcherByYear(year);
+
+        if (top == null) {
+            System.out.println("No researchers found for year " + year + ".");
+            return;
+        }
+
+        System.out.println(
+                "Top cited in "
+                + year
+                + ": "
+                + top.getUser()
+                + " | h-index="
+                + top.calculateHIndex()
+        );
     }
 
     public static boolean setSupervisor(GraduateStudent student,

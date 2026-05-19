@@ -3,7 +3,7 @@ package model.users;
 import model.academic.Course;
 import model.academic.Mark;
 import model.enums.Language;
-import models.observer.Observer;
+import model.observer.Observer;
 
 import java.io.Serializable;
 import java.util.ArrayList;

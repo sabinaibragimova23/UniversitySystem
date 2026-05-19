@@ -2,7 +2,7 @@ package views;
 
 import controllers.*;
 import model.users.*;
-import model.comunication.Request;
+import model.communication.Request;
 import model.enums.RequestStatus;
 import core.DataStorage;
 
@@ -44,6 +44,24 @@ public class TechSupportView extends BaseView {
         System.out.println("5 - Mark DONE");
         System.out.println("6 - Send message");
         System.out.println("0 - Logout");
+    }
+    
+    public static void showNewRequests() {
+        separator();
+        System.out.println("NEW REQUESTS:");
+        boolean found = false;
+        for (Request r : DataStorage.getRequests()) {
+            if (r.getStatus() == RequestStatus.NEW
+                    || r.getStatus() == RequestStatus.VIEWED) {
+                System.out.println("  [" + r.getStatus() + "] "
+                    + r.getDescription()
+                    + " | from: "
+                    + r.getAuthor().getFirstName()
+                    + " " + r.getAuthor().getLastName());
+                found = true;
+            }
+        }
+        if (!found) System.out.println("  No new requests.");
     }
 
     private static void viewNewRequests() {

@@ -2,7 +2,7 @@ package model.users;
 
 import java.util.*;
 
-public class StudentOrganization {
+public class StudentOrganization implements java.io.Serializable{
 
     private String name;
     private Student head;
@@ -21,7 +21,7 @@ public class StudentOrganization {
         }
     }
 
-=
+
     public void setHead(Student student) {
         this.head = student;
         addMember(student);

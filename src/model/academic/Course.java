@@ -6,8 +6,8 @@ import model.users.Student;
 
 import java.util.*;
 
-public class Course {
-    private String courseId;
+public class Course implements java.io.Serializable {   
+	private String courseId;
     private String name;
     private String idls;
     private CourseType type;

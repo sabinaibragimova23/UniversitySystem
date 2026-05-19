@@ -9,7 +9,8 @@ import java.util.List;
 
 public class Admin extends Employee {
 
-    private List<String> logFile;
+	private static final long serialVersionUID = 1L;
+	private List<String> logFile;
 
     public Admin(int id,
                  String login,
@@ -28,13 +29,15 @@ public class Admin extends Employee {
     }
 
     public void addUser(User user) {
-        DataStorage.getInstance().addUser(user);
+        DataStorage.getInstance();
+		DataStorage.addUser(user);
         log("Added: " + user);
         System.out.println("[Admin] User added: " + user);
     }
 
     public void removeUser(User user) {
-        DataStorage.getInstance().removeUser(user);
+        DataStorage.getInstance();
+		DataStorage.removeUser(user);
         log("Removed: " + user);
     }
 
@@ -70,6 +73,6 @@ public class Admin extends Employee {
 
     @Override
     public String toString() {
-        return getInfo();
+        return firstName + " " + lastName + " [Admin]";
     }
 }

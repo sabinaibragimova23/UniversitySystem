@@ -1,6 +1,6 @@
 package model.users;
 
-import model.comunication.Request;
+import model.communication.Request;
 import model.enums.Language;
 import model.enums.RequestStatus;
 
@@ -73,7 +73,7 @@ public class TechSupportSpecialist extends Employee {
 
     @Override
     public String toString() {
-        return getInfo();
+        return firstName + " " + lastName + " [TechSupport]";
     }
 
     public List<Request> getRequests() {

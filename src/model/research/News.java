@@ -2,8 +2,7 @@ package model.research;
 
 import java.util.*;
 
-public class News {
-
+public class News implements java.io.Serializable {
     private String title;
     private String content;
     private String topic;

@@ -1,4 +1,4 @@
-package model.comunication;
+package model.communication;
 
 import model.users.Student;
 import model.users.Teacher;

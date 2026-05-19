@@ -70,7 +70,7 @@ public class MainView extends BaseView {
 
         int role = readIntRange("> ", 1, 5);
 
-        int id = readInt("ID: ");
+        int id = DataStorage.getUsers().size() + 1;
         String login = readString("Login: ");
         String password = readString("Password: ");
         String firstName = readString("First name: ");
@@ -93,17 +93,6 @@ public class MainView extends BaseView {
                 password
         );
 
-        if (newUser instanceof Student s) {
-
-            String sid = readString("Student ID: ");
-            String major = readString("Major: ");
-            int year = readIntRange("Year (1-4): ", 1, 4);
-
-            s.setStudentId(sid);
-            s.setMajor(major);
-            s.setYear(year);
-        }
-
         if (newUser instanceof GraduateStudent gs) {
 
             String sid = readString("Student ID: ");
@@ -121,8 +110,18 @@ public class MainView extends BaseView {
             gs.setMajor(major);
             gs.setYear(year);
             gs.setDegreeType(degree);
-        }
 
+        } else if (newUser instanceof Student s) {
+
+            String sid = readString("Student ID: ");
+            String major = readString("Major: ");
+            int year = readIntRange("Year (1-4): ", 1, 4);
+
+            s.setStudentId(sid);
+            s.setMajor(major);
+            s.setYear(year);
+        }
+        
         if (newUser instanceof Teacher t) {
 
             System.out.println("Position:");

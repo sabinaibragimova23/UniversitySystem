@@ -1,6 +1,6 @@
-package model.comunication;
+package model.communication;
 
-import model.users.Employee;
+import model.users.User;
 import model.enums.RequestStatus;
 
 import java.io.Serializable;
@@ -13,10 +13,10 @@ public class Request implements Serializable {
 
     private String description;
     private RequestStatus status;
-    private Employee author;
+    private User author;
     private Date date;
 
-    public Request(String description, Employee author) {
+    public Request(String description, User author) {
         this.description = description;
         this.author = author;
         this.status = RequestStatus.NEW;
@@ -36,7 +36,7 @@ public class Request implements Serializable {
         return status;
     }
 
-    public Employee getAuthor() {
+    public User getAuthor() {
         return author;
     }
 

@@ -1,8 +1,8 @@
 package model.research;
 
+import model.observer.Observable;
+import model.observer.Observer;
 import model.users.User;
-import models.observer.Observable;
-import models.observer.Observer;
 
 import java.io.Serializable;
 import java.util.ArrayList;

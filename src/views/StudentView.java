@@ -37,7 +37,7 @@ public class StudentView extends BaseView {
 
             showMenu(student);
 
-            int option = readIntRange("> ", 0, 14);
+            int option = readIntRange("> ", 0, 16);
 
             switch (option) {
 
@@ -68,6 +68,10 @@ public class StudentView extends BaseView {
                 case 13 -> switchLanguageMenu(student);
 
                 case 14 -> becomeResearcherMenu(student);
+
+                case 15 -> submitRequestMenu(student);
+
+                case 16 -> viewNewsMenu();
 
                 case 0 -> {
 
@@ -103,6 +107,8 @@ public class StudentView extends BaseView {
         System.out.println("12 - Send message");
         System.out.println("13 - Switch language");
         System.out.println("14 - Become Researcher");
+        System.out.println("15 - Submit request");
+        System.out.println("16 - View news & comments");
         System.out.println("0  - Logout");
     }
 
@@ -431,7 +437,16 @@ public class StudentView extends BaseView {
     }
 
     // 14
-    private static void becomeResearcherMenu(Student student)
+    private static void submitRequestMenu(Student student) throws IOException {
+
+        String description = readString("Request description: ");
+
+        TechSupportController.createRequest(description, student);
+
+        successMsg("Request submitted.");
+    }
+
+        private static void becomeResearcherMenu(Student student)
             throws IOException {
 
         if (student.isResearcher()) {
@@ -467,6 +482,59 @@ public class StudentView extends BaseView {
             successMsg(
                     "You are now a Researcher!"
             );
+        }
+    }
+
+    private static void viewNewsMenu() throws IOException {
+
+        java.util.List<model.research.News> newsList = DataStorage.getNews();
+
+        if (newsList.isEmpty()) {
+            System.out.println("No news yet.");
+            return;
+        }
+
+        System.out.println("NEWS");
+
+        for (int i = 0; i < newsList.size(); i++) {
+
+            model.research.News n = newsList.get(i);
+
+            System.out.println(
+                    (n.isPinned() ? "[PINNED] " : "")
+                    + (i + 1)
+                    + ". "
+                    + n.getTitle()
+                    + " ["
+                    + n.getTopic()
+                    + "]"
+            );
+        }
+
+        System.out.println("Enter number to comment, 0 to go back:");
+
+        int pick = readIntRange("> ", 0, newsList.size());
+
+        if (pick == 0) return;
+
+        model.research.News selected = newsList.get(pick - 1);
+
+        System.out.println(" + selected.getTitle()");
+        System.out.println(selected.getContent());
+
+        if (!selected.getComments().isEmpty()) {
+            System.out.println("Comments:");
+            for (String c : selected.getComments()) {
+                System.out.println("  - " + c);
+            }
+        }
+
+        String comment = readString("Add comment (or Enter to skip): ");
+
+        if (!comment.trim().isEmpty()) {
+            selected.addComment(comment.trim());
+            DataStorage.save();
+            successMsg("Comment added.");
         }
     }
 }

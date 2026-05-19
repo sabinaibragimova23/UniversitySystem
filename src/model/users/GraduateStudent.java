@@ -35,9 +35,7 @@ public class GraduateStudent extends Student implements Serializable {
     }
 
     public void setSupervisor(ResearchDecorator supervisor) throws LowHIndexException {
-
         int h = supervisor.calculateHIndex();
-
         if (h < 3) {
             throw new LowHIndexException(supervisor.getUser().toString(), h);
         }
@@ -57,7 +55,6 @@ public class GraduateStudent extends Student implements Serializable {
     }
 
     public void submitDiploma() {
-
         System.out.println(
                 this
                 + " submitted diploma with "
@@ -81,6 +78,13 @@ public class GraduateStudent extends Student implements Serializable {
     public ResearchDecorator getResearcher() {
         return researchProfile;
     }
+    
+    @Override
+    public void sendMessage(User receiver, String content) {
+        model.communication.Message msg = new model.communication.Message(this, receiver, content);
+        msg.send();
+    }
+
 
     @Override
     public boolean isResearcher() {

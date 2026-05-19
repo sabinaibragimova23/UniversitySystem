@@ -3,7 +3,7 @@ package views;
 import controllers.*;
 import model.users.*;
 import model.academic.*;
-import model.comunication.RecommendationLetter;
+import model.communication.RecommendationLetter;
 import model.comparators.*;
 import model.enums.*;
 import model.research.*;
@@ -26,7 +26,7 @@ public class TeacherView extends BaseView {
 
             menu();
 
-            int option = readIntRange("> ", 0, 10);
+            int option = readIntRange("> ", 0, 11);
 
             switch (option) {
 
@@ -53,6 +53,8 @@ public class TeacherView extends BaseView {
                                 + String.format("%.1f", teacher.getRating())
                 );
 
+                case 11 -> submitRequestMenu(teacher);
+
                 case 0 -> {
                     System.out.println("Session closed.");
                     running = false;
@@ -78,10 +80,10 @@ public class TeacherView extends BaseView {
         System.out.println("8  - Research");
         System.out.println("9  - Recommendation letter");
         System.out.println("10 - Rating");
+        System.out.println("11 - Submit request");
         System.out.println("0  - Logout");
     }
 
-    // ===== IMPROVED PUT MARK (from second code) =====
     private static void putMarkMenu(Teacher teacher) throws IOException {
 
         List<Course> myCourses = teacher.getCourses();
@@ -91,7 +93,7 @@ public class TeacherView extends BaseView {
             return;
         }
 
-        System.out.println("=== My Courses ===");
+        System.out.println("My Courses:");
 
         for (int i = 0; i < myCourses.size(); i++) {
             System.out.println((i + 1) + " - " + myCourses.get(i).getName());
@@ -107,7 +109,7 @@ public class TeacherView extends BaseView {
             return;
         }
 
-        System.out.println("=== Students ===");
+        System.out.println("Students:");
 
         for (int i = 0; i < students.size(); i++) {
 
@@ -136,7 +138,6 @@ public class TeacherView extends BaseView {
         successMsg("Mark saved: " + mark.getGrade());
     }
 
-    // ===== SAFE VIEW STUDENTS (FIXED NULL ISSUES) =====
     private static void viewStudents() {
 
         System.out.println("=== All Students ===");
@@ -153,42 +154,71 @@ public class TeacherView extends BaseView {
                 );
     }
 
-    // ===== SAFE SEND MESSAGE =====
     private static void sendMessageMenu(Teacher teacher) throws IOException {
 
-        String login = readString("Recipient login: ");
+        List<User> allUsers = DataStorage.getUsers().stream()
+                .filter(u -> u.getLogin() != null
+                        && !u.getLogin().equals(teacher.getLogin()))
+                .collect(Collectors.toList());
 
-        String msg = readString("Message: ");
-
-        User receiver = DataStorage.getUsers().stream()
-
-                .filter(u -> u.getLogin() != null)
-                .filter(u -> u.getLogin().equals(login))
-                .findFirst()
-                .orElse(null);
-
-        if (receiver == null) {
-            errorMsg("User not found: " + login);
+        if (allUsers.isEmpty()) {
+            errorMsg("No other users in the system.");
             return;
         }
 
-        teacher.sendMessage(receiver, msg);
+        System.out.println("USERS:");
+
+        for (int i = 0; i < allUsers.size(); i++) {
+            User u = allUsers.get(i);
+            System.out.println(
+                    (i + 1)
+                    + " - ["
+                    + u.getClass().getSimpleName()
+                    + "] "
+                    + u.getFirstName()
+                    + " "
+                    + u.getLastName()
+            );
+        }
+
+        int ri = readIntRange("Send to: ", 1, allUsers.size());
+
+        String msg = readString("Message: ");
+
+        teacher.sendMessage(allUsers.get(ri - 1), msg);
 
         successMsg("Message sent.");
     }
 
     private static void sendComplaintMenu(Teacher teacher) throws IOException {
 
-        String slog = readString("Student login: ");
+        List<Student> students = DataStorage.getUsers().stream()
+                .filter(u -> u instanceof Student)
+                .map(u -> (Student) u)
+                .collect(Collectors.toList());
 
-        Student student = findStudent(slog);
-
-        if (student == null) {
-            errorMsg("Student not found: " + slog);
+        if (students.isEmpty()) {
+            errorMsg("No students in the system.");
             return;
         }
 
-        System.out.println("Urgency: 1-LOW 2-MEDIUM 3-HIGH");
+        System.out.println("STUDENTS:");
+
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println(
+                    (i + 1)
+                    + " - "
+                    + students.get(i).getFirstName()
+                    + " "
+                    + students.get(i).getLastName()
+            );
+        }
+
+        int si = readIntRange("Pick student: ", 1, students.size());
+
+        Student student = students.get(si - 1);
+
+        System.out.println("Urgency: 1-LOW  2-MEDIUM  3-HIGH");
 
         int u = readIntRange("> ", 1, 3);
 
@@ -215,7 +245,7 @@ public class TeacherView extends BaseView {
         teacher.generateDetailedReport(course);
     }
 
-    // ===== RESEARCH (kept your version) =====
+
     private static void researchMenu(Teacher teacher) throws IOException {
 
         if (!teacher.isResearcher()) {
@@ -230,9 +260,16 @@ public class TeacherView extends BaseView {
 
         ResearchDecorator profile = teacher.getResearchProfile();
 
-        System.out.println("1-Publish 2-Citations 3-Date 4-Pages 5-H-index 6-All 7-Top");
+        System.out.println("1 - Publish paper");
+        System.out.println("2 - My papers by citations");
+        System.out.println("3 - My papers by date");
+        System.out.println("4 - My papers by pages");
+        System.out.println("5 - My h-index");
+        System.out.println("6 - All university papers");
+        System.out.println("7 - Top cited researcher");
+        System.out.println("8 - Top cited by year");
 
-        int opt = readIntRange("> ", 1, 7);
+        int opt = readIntRange("> ", 1, 8);
 
         switch (opt) {
 
@@ -249,6 +286,11 @@ public class TeacherView extends BaseView {
             case 6 -> ResearchController.printAllPapers(new PaperCitationComparator());
 
             case 7 -> ResearchController.showTopCited();
+
+            case 8 -> {
+                int year = readInt("Year: ");
+                ResearchController.showTopCitedByYear(year);
+            }
         }
     }
 
@@ -279,14 +321,33 @@ public class TeacherView extends BaseView {
 
     private static void writeRecommendationMenu(Teacher teacher) throws IOException {
 
-        String slog = readString("Student login: ");
+        List<Student> students = DataStorage.getUsers().stream()
+                .filter(u -> u instanceof Student)
+                .map(u -> (Student) u)
+                .collect(Collectors.toList());
 
-        Student student = findStudent(slog);
-
-        if (student == null) {
-            errorMsg("Student not found: " + slog);
+        if (students.isEmpty()) {
+            errorMsg("No students in the system.");
             return;
         }
+
+        System.out.println("STUDENTS:");
+
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println(
+                    (i + 1)
+                    + " - "
+                    + students.get(i).getFirstName()
+                    + " "
+                    + students.get(i).getLastName()
+                    + " | GPA: "
+                    + String.format("%.2f", students.get(i).getGpa())
+            );
+        }
+
+        int si = readIntRange("Pick student: ", 1, students.size());
+
+        Student student = students.get(si - 1);
 
         String purpose = readString("Purpose: ");
         String body = readString("Body: ");
@@ -298,6 +359,16 @@ public class TeacherView extends BaseView {
     }
 
    
+
+    private static void submitRequestMenu(Teacher teacher) throws IOException {
+
+        String desc = readString("Describe the problem: ");
+
+        TechSupportController.createRequest(desc, teacher);
+
+        successMsg("Request submitted. Tech support will be notified.");
+    }
+
     private static Student findStudent(String login) {
 
         return DataStorage.getUsers().stream()

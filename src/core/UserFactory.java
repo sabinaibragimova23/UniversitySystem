@@ -7,7 +7,6 @@ import model.users.Student;
 import model.users.Teacher;
 import model.users.TechSupportSpecialist;
 import model.users.User;
-import model.*;
 import model.enums.*;
 
 public class UserFactory {

@@ -44,6 +44,7 @@ public class ManagerView extends BaseView {
                 case 9 -> publishNews(manager);
                 case 10 -> NewsController.listNews();
                 case 11 -> createOrgMenu();
+                case 12 -> addCommentMenu();
                 case 0 -> {
                     System.out.println("[Manager] Logged out.");
                     active = false;
@@ -66,7 +67,8 @@ public class ManagerView extends BaseView {
         System.out.println("8  - Requests");
         System.out.println("9  - Publish news");
         System.out.println("10 - News list");
-        System.out.println("11 - Create organization"); // ➕ added
+        System.out.println("11 - Create organization");
+        System.out.println("12 - Add comment to news");
         System.out.println("0  - Logout");
         System.out.print("> ");
     }
@@ -99,27 +101,49 @@ public class ManagerView extends BaseView {
 
     private static void assignCourse(Manager manager) throws IOException {
 
-        System.out.print("Course ID: ");
-        String cid = reader.readLine().trim();
+        java.util.List<Course> courses = DataStorage.getCourses();
 
-        System.out.print("Teacher login: ");
-        String login = reader.readLine().trim();
-
-        Course course = DataStorage.getCourses().stream()
-                .filter(c -> c.getCourseId().equals(cid))
-                .findFirst()
-                .orElse(null);
-
-        Teacher teacher = DataStorage.getUsers().stream()
-                .filter(u -> u instanceof Teacher && u.getLogin().equals(login))
-                .map(u -> (Teacher) u)
-                .findFirst()
-                .orElse(null);
-
-        if (course == null || teacher == null) {
-            errorMsg("Not found.");
+        if (courses.isEmpty()) {
+            errorMsg("No courses available. Add a course first.");
             return;
         }
+
+        System.out.println("COURSES");
+
+        for (int i = 0; i < courses.size(); i++) {
+            System.out.println("  " + (i + 1) + " - " + courses.get(i));
+        }
+
+        int ci = readIntRange("Pick course: ", 1, courses.size());
+        Course course = courses.get(ci - 1);
+
+        java.util.List<Teacher> teachers = DataStorage.getUsers().stream()
+                .filter(u -> u instanceof Teacher)
+                .map(u -> (Teacher) u)
+                .collect(java.util.stream.Collectors.toList());
+
+        if (teachers.isEmpty()) {
+            errorMsg("No teachers registered yet.");
+            return;
+        }
+
+        System.out.println("TEACHERS");
+
+        for (int i = 0; i < teachers.size(); i++) {
+            System.out.println(
+                    "  " + (i + 1)
+                    + " - "
+                    + teachers.get(i).getFirstName()
+                    + " "
+                    + teachers.get(i).getLastName()
+                    + " ("
+                    + teachers.get(i).getPosition()
+                    + ")"
+            );
+        }
+
+        int ti = readIntRange("Pick teacher: ", 1, teachers.size());
+        Teacher teacher = teachers.get(ti - 1);
 
         CourseController.assignToTeacher(course, teacher, manager);
         successMsg("Assigned.");
@@ -159,5 +183,31 @@ public class ManagerView extends BaseView {
         DataStorage.save();
 
         successMsg("Organization created: " + name);
+    }
+
+    private static void addCommentMenu() throws IOException {
+
+        java.util.List<model.research.News> newsList = DataStorage.getNews();
+
+        if (newsList.isEmpty()) {
+            System.out.println("No news yet.");
+            return;
+        }
+
+        System.out.println("NEWS LIST");
+
+        for (int i = 0; i < newsList.size(); i++) {
+            System.out.println("  " + (i + 1) + " - " + newsList.get(i).getTitle());
+        }
+
+        int idx = readIntRange("Pick news: ", 1, newsList.size());
+
+        model.research.News chosen = newsList.get(idx - 1);
+
+        String comment = readString("Comment: ");
+
+        chosen.addComment(comment);
+
+        successMsg("Comment added to: " + chosen.getTitle());
     }
 }

@@ -8,14 +8,14 @@ import model.users.User;
 public class UserController {
     public static User login(String login,
                              String password) {
-        for (User u : DataStorage.getUsers()) {
+    	for (User u : DataStorage.getUsers()) {
             if (u.login(login, password)) {
-                System.out.println("[Auth] Welcome, " + u + "!");
+                System.out.println("Welcome, " + u.getFirstName() + "!");
                 return u;
             }
         }
 
-        System.out.println("[Auth] Invalid credentials.");
+        System.out.println("Wrong login or password. Try again.");
         return null;
     }
 

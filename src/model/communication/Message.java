@@ -1,4 +1,4 @@
-package model.comunication;
+package model.communication;
 
 import model.users.User;
 
