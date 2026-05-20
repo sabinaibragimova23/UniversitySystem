@@ -15,7 +15,6 @@ public class Message implements Serializable {
     private Date date;
 
     public Message(User sender, User receiver, String content) {
-
         this.sender = sender;
         this.receiver = receiver;
         this.content = content;
@@ -23,19 +22,10 @@ public class Message implements Serializable {
     }
 
     public void send() {
-        receiver.update(
-                "Message",
-                "[From " + sender + "]: " + content
+        receiver.update( "Message", "[From " + sender + "]: " + content
         );
 
-        System.out.println(
-                "[Sent] "
-                + sender
-                + " -> "
-                + receiver
-                + ": "
-                + content
-        );
+        System.out.println( "[Sent] " + sender + " " + receiver + ": " + content);
     }
 
     public User getSender() {
@@ -56,12 +46,6 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return "Message[from="
-                + sender
-                + ", to="
-                + receiver
-                + ", content="
-                + content
-                + "]";
+        return "Message[from=" + sender + ", to=" + receiver + ", content=" + content + "]";
     }
 }

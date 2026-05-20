@@ -42,9 +42,9 @@ public class AcademicReport implements Serializable {
 
        
         sb.append("                COURSE REPORT                      \n");
-        sb.append("Course    : ").append(course.getName()).append("\n");
-        sb.append("Teacher   : ").append(teacher).append("\n");
-        sb.append("Generated : ").append(generatedAt).append("\n");
+        sb.append("Course: ").append(course.getName()).append("\n");
+        sb.append("Teacher: ").append(teacher).append("\n");
+        sb.append("Generated: ").append(generatedAt).append("\n");
 
         if (marks.isEmpty()) {
             sb.append("\nNo marks available.\n");
@@ -78,11 +78,11 @@ public class AcademicReport implements Serializable {
         sb.append("\n STATISTICS\n");
 
         sb.append(String.format("Students enrolled : %d%n", students.size()));
-        sb.append(String.format("Marks recorded    : %d%n", marks.size()));
-        sb.append(String.format("Average score     : %.1f%n", average));
-        sb.append(String.format("Pass rate         : %.1f%%%n", passRate));
-        sb.append(String.format("Highest score     : %.1f%n", highest));
-        sb.append(String.format("Lowest score      : %.1f%n", lowest));
+        sb.append(String.format("Marks recorded: %d%n", marks.size()));
+        sb.append(String.format("Average score: %.1f%n", average));
+        sb.append(String.format("Pass rate: %.1f%%%n", passRate));
+        sb.append(String.format("Highest score: %.1f%n", highest));
+        sb.append(String.format("Lowest score: %.1f%n", lowest));
 
         sb.append("\nGRADE DISTRIBUTION\n");
 
@@ -158,11 +158,4 @@ public class AcademicReport implements Serializable {
         System.out.println("========================================");
     }
 
-    private String buildBar(long count, int total) {
-
-        int filled = (int) Math.round((double) count / total * 10);
-
-        return "█".repeat(filled)
-                + "░".repeat(10 - filled);
-    }
 }

@@ -26,13 +26,7 @@ public class Journal implements Observable, Serializable {
     public void subscribe(User user) {
         if (!subscribers.contains(user)) {
             subscribers.add(user);
-            System.out.println(
-                    "[Journal: "
-                    + name
-                    + "] "
-                    + user
-                    + " subscribed."
-            );
+            System.out.println( "[Journal: " + name + "] " + user + " subscribed." );
         }
     }
 
@@ -43,8 +37,7 @@ public class Journal implements Observable, Serializable {
     public void publishPaper(ResearchPaper paper) {
         papers.add(paper);
         notifyObservers(
-                "NewPaper in " + name,
-                paper.getTitle()
+                "NewPaper in " + name, paper.getTitle()
         );
     }
 
@@ -84,12 +77,6 @@ public class Journal implements Observable, Serializable {
 
     @Override
     public String toString() {
-        return "Journal[name="
-                + name
-                + ", papers="
-                + papers.size()
-                + ", subscribers="
-                + subscribers.size()
-                + "]";
+        return "Journal[name=" + name + ", papers=" + papers.size() + ", subscribers=" + subscribers.size() + "]";
     }
 }

@@ -29,14 +29,7 @@ public class Attendance implements Serializable {
         new Attendance(lesson, student, presence);
 
         System.out.println(
-                "[Attendance] "
-                + student.getFirstName()
-                + " - "
-                + lesson.getType()
-                + " '"
-                + lesson.getTopic()
-                + "' : "
-                + (presence ? "PRESENT" : "ABSENT")
+                "[Attendance] " + student.getFirstName() + " - " + lesson.getType() + " '" + lesson.getTopic() + "' : " + (presence ? "PRESENT" : "ABSENT")
         );
     }
 
@@ -58,13 +51,7 @@ public class Attendance implements Serializable {
 
     @Override
     public String toString() {
-        return "Attendance[student="
-                + student
-                + ", lesson="
-                + lesson.getType()
-                + ", present="
-                + isPresent
-                + "]";
+        return "Attendance[student=" + student + ", lesson=" + lesson.getType() + ", present=" + isPresent + "]";
     }
 
     @Override

@@ -52,13 +52,7 @@ public class ResearchDecorator implements Researcher, Serializable {
             Collections.sort(sorted);
         }
 
-        System.out.println(
-                "Papers of "
-                + user
-                + " (h-index="
-                + calculateHIndex()
-                + "):"
-        );
+        System.out.println("Papers of " + user + " (h-index=" + calculateHIndex() + "):");
 
         for (ResearchPaper p : sorted) {
             System.out.println("  " + p);
@@ -67,15 +61,8 @@ public class ResearchDecorator implements Researcher, Serializable {
 
     @Override
     public void publishPaper(ResearchPaper paper) {
-
         papers.add(paper);
-
-        System.out.println(
-                "[Research] "
-                + user
-                + " published: "
-                + paper.getTitle()
-        );
+        System.out.println( "[Research] " + user + " published: " + paper.getTitle());
 
         News announcement = new News(
                 "New paper by " + user,
@@ -119,13 +106,7 @@ public class ResearchDecorator implements Researcher, Serializable {
 
     @Override
     public String toString() {
-        return "ResearchDecorator[user="
-                + user
-                + ", papers="
-                + papers.size()
-                + ", hIndex="
-                + calculateHIndex()
-                + "]";
+        return "ResearchDecorator[user=" + user + ", papers=" + papers.size() + ", hIndex=" + calculateHIndex() + "]";
     }
 
     @Override

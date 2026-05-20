@@ -72,72 +72,51 @@ public class TechSupportView extends BaseView {
     }
 
     private static void acceptMenu(TechSupportSpecialist tech) throws IOException {
-
         Request r = pickRequest();
-
         if (r == null) return;
-
         TechSupportController.acceptRequest(tech, r);
-
         successMsg("Request accepted.");
     }
 
     private static void rejectMenu(TechSupportSpecialist tech) throws IOException {
-
         Request r = pickRequest();
-
         if (r == null) return;
-
         TechSupportController.rejectRequest(tech, r);
-
         successMsg("Request rejected.");
     }
 
     private static void doneMenu(TechSupportSpecialist tech) throws IOException {
-
         Request r = pickRequest();
-
         if (r == null) return;
-
         TechSupportController.markDone(tech, r);
-
         successMsg("Request marked as DONE.");
     }
 
     private static Request pickRequest() throws IOException {
-
         List<Request> requests = DataStorage.getRequests();
-
         if (requests.isEmpty()) {
-
             System.out.println("No requests available.");
             return null;
         }
 
         System.out.println("\nREQUEST LIST");
-
         for (int i = 0; i < requests.size(); i++) {
-
             System.out.println("  " + (i + 1) + " - " + requests.get(i));
         }
 
         int idx = readIntRange("> ", 1, requests.size());
-
         return requests.get(idx - 1);
     }
 
     private static void sendMessageMenu(TechSupportSpecialist tech) throws IOException {
-
         String login = readString("Recipient login: ");
         String msg = readString("Message: ");
-
         User receiver = DataStorage.getUsers().stream()
                 .filter(u -> u.getLogin().equals(login))
                 .findFirst()
                 .orElse(null);
 
         if (receiver == null) {
-
             errorMsg("User not found: " + login);
             return;
         }

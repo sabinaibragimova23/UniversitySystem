@@ -34,7 +34,13 @@ public class StudentOrganization implements java.io.Serializable{
         return "StudentOrganization{'" + name + "', members=" + members.size() + "}";
     }
 
-    public String getName() { return name; }
-    public Student getHead() { return head; }
-    public List<Student> getMembers() { return Collections.unmodifiableList(members); }
+    public String getName() { 
+    	return name; 
+    	}
+    public Student getHead() {
+    	return head; 
+    	}
+    public List<Student> getMembers() {
+    	return Collections.unmodifiableList(members); 
+    	}
 }

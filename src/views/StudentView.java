@@ -410,7 +410,7 @@ public class StudentView extends BaseView {
         successMsg("Message sent.");
     }
 
-    // 13
+
     private static void switchLanguageMenu(Student student)
             throws IOException {
 

@@ -21,19 +21,16 @@ public class NewsController {
     }
 
     public static void listNews() {
-        System.out.println("=== News (pinned first) ===");
+        System.out.println("---News (pinned first)---");
         for (News n : DataStorage.getNews()) {
             String prefix;
             if (n.isPinned()) {
-                prefix = "  [📌] ";
+                prefix = "  [#] ";
             } else {
                 prefix = "  [ ] ";
             }
             System.out.println(
-                    prefix
-                            + n.getTitle()
-                            + " | "
-                            + n.getTopic()
+                    prefix + n.getTitle() + " | " + n.getTopic()
             );
         }
     }

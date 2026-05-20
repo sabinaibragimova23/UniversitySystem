@@ -10,12 +10,8 @@ import java.util.List;
 
 public class TechSupportSpecialist extends Employee {
     private List<Request> requests;
-    public TechSupportSpecialist(int id,
-                                  String login,
-                                  String password,
-                                  String firstName,
-                                  String lastName) {
-
+   
+    public TechSupportSpecialist(int id, String login, String password, String firstName, String lastName) {
     	super(id,
     	          login,
     	          password,
@@ -47,10 +43,7 @@ public class TechSupportSpecialist extends Employee {
                              RequestStatus status) {
         request.updateStatus(status);
         System.out.println(
-                "[TechSupport] "
-                        + status
-                        + ": "
-                        + request.getDescription()
+                "[TechSupport] " + status + ": " + request.getDescription()
         );
     }
 
@@ -62,13 +55,7 @@ public class TechSupportSpecialist extends Employee {
     }
 
     public String getInfo() {
-        return "TechSupport{'"
-                + firstName
-                + " "
-                + lastName
-                + "', requests="
-                + requests.size()
-                + "}";
+        return "TechSupport{'" + firstName + " " + lastName + "', requests=" + requests.size() + "}";
     }
 
     @Override

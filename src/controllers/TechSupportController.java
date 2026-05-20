@@ -16,7 +16,7 @@ public class TechSupportController {
     }
 
     public static void viewNewRequests(TechSupportSpecialist tech) {
-        System.out.println("=== New Requests ===");
+        System.out.println("--- New Requests ---");
         for (Request r : DataStorage.getRequests()) {
             if (r.getStatus().name().equals("NEW")) {
                 System.out.println("  " + r);

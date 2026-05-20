@@ -17,13 +17,7 @@ public class Lesson implements Serializable {
     private int duration;
     private Teacher teacher;
 
-    public Lesson(String lessonId,
-                  LessonType type,
-                  String topic,
-                  String room,
-                  int duration,
-                  Teacher teacher) {
-
+    public Lesson(String lessonId, LessonType type, String topic, String room, int duration, Teacher teacher) {
         this.lessonId = lessonId;
         this.type = type;
         this.topic = topic;
@@ -58,18 +52,7 @@ public class Lesson implements Serializable {
 
     @Override
     public String toString() {
-
-        return "Lesson[type="
-                + type
-                + ", topic="
-                + topic
-                + ", room="
-                + room
-                + ", duration="
-                + duration
-                + "min, teacher="
-                + teacher
-                + "]";
+        return "Lesson[type=" + type + ", topic=" + topic + ", room=" + room + ", duration=" + duration + "min, teacher=" + teacher + "]";
     }
 
     @Override

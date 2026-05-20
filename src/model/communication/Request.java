@@ -10,12 +10,11 @@ import java.util.Objects;
 public class Request implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private String description;
     private RequestStatus status;
     private User author;
     private Date date;
-
+    
     public Request(String description, User author) {
         this.description = description;
         this.author = author;
@@ -24,7 +23,6 @@ public class Request implements Serializable {
     }
 
     public void updateStatus(RequestStatus newStatus) {
-
         this.status = newStatus;
     }
 
@@ -46,13 +44,7 @@ public class Request implements Serializable {
 
     @Override
     public String toString() {
-        return "Request[description="
-                + description
-                + ", status="
-                + status
-                + ", author="
-                + author
-                + "]";
+        return "Request[description=" + description + ", status=" + status + ", author=" + author + "]";
     }
 
     @Override

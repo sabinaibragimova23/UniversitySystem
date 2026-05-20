@@ -35,19 +35,10 @@ public class ResearchController {
             return;
         }
 
-        System.out.println(
-                "Top cited researcher: "
-                + top.getUser()
-                + " | h-index="
-                + top.calculateHIndex()
-                + " | papers="
-                + top.getPapers().size()
+        System.out.println( "Top cited researcher: " + top.getUser() + " | h-index=" + top.calculateHIndex() + " | papers=" + top.getPapers().size()
         );
 
-        model.research.News announcement = new model.research.News(
-                "Top Cited: " + top.getUser(),
-                top.getUser() + " is the most cited researcher with h-index="
-                        + top.calculateHIndex(),
+        model.research.News announcement = new model.research.News( "Top Cited: " + top.getUser(), top.getUser() + " is the most cited researcher with h-index="  + top.calculateHIndex(),
                 "Research",
                 new java.util.Date()
         );
@@ -56,9 +47,7 @@ public class ResearchController {
     }
 
     public static void showTopCitedByYear(int year) {
-
         ResearchDecorator top = DataStorage.getTopCitedResearcherByYear(year);
-
         if (top == null) {
             System.out.println("No researchers found for year " + year + ".");
             return;
@@ -115,10 +104,7 @@ public class ResearchController {
     }
     public static void showHIndex(ResearchDecorator researcher) {
         System.out.println(
-                "[h-index] "
-                        + researcher.getUser()
-                        + " → "
-                        + researcher.calculateHIndex()
+                "[h-index] " + researcher.getUser() + " → " + researcher.calculateHIndex()
         );
     }
 }

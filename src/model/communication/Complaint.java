@@ -17,11 +17,7 @@ public class Complaint implements Serializable {
     private String reason;
     private boolean isSigned;
 
-    public Complaint(Student student,
-                     Teacher head,
-                     UrgencyLevel urgency,
-                     String reason) {
-
+    public Complaint(Student student, Teacher head, UrgencyLevel urgency, String reason) {
         this.student = student;
         this.head = head;
         this.urgency = urgency;
@@ -30,17 +26,8 @@ public class Complaint implements Serializable {
     }
 
     public void sign() {
-
         isSigned = true;
-
-        System.out.println(
-                "[Complaint] Signed by "
-                + head
-                + " about "
-                + student
-                + " ["
-                + urgency
-                + "]"
+        System.out.println( "[Complaint] Signed by " + head + " about " + student + " [" + urgency + "]"
         );
     }
 
@@ -66,15 +53,7 @@ public class Complaint implements Serializable {
 
     @Override
     public String toString() {
-        return "Complaint[student="
-                + student
-                + ", urgency="
-                + urgency
-                + ", signed="
-                + isSigned
-                + ", reason="
-                + reason
-                + "]";
+        return "Complaint[student=" + student + ", urgency="  + urgency + ", signed=" + isSigned + ", reason=" + reason + "]";
     }
 
     @Override

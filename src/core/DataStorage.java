@@ -31,57 +31,19 @@ import java.util.*;
  * @version 1.0
  */
 public class DataStorage {
-
-    /**
-     * Singleton instance of DataStorage.
-     */
-    private static final DataStorage INSTANCE =
-            new DataStorage();
-
-    /**
-     * Directory where serialized data is stored.
-     */
+    private static final DataStorage INSTANCE = new DataStorage();
     private static final String DATA_DIR = "data";
-
-    /**
-     * List of all system users.
-     */
     private static List<User> users;
-
-    /**
-     * List of all university courses.
-     */
     private static List<Course> courses;
-
-    /**
-     * List of published news.
-     */
     private static List<News> news;
-
-    /**
-     * List of system requests.
-     */
     private static List<Request> requests;
 
-    /**
-     * List of registered researchers.
-     */
     private static List<ResearchDecorator> researchers;
-
-    /**
-     * List of student organizations.
-     */
     private static List<StudentOrganization> organizations;
 
-    /**
-     * Static initializer for creating data directory.
-     */
     static {
-
         File dir = new File(DATA_DIR);
-
         if (!dir.exists()) {
-
             dir.mkdirs();
         }
     }
@@ -379,28 +341,23 @@ public class DataStorage {
         }
 
         if (c != null) {
-
             courses = (List<Course>) c;
         }
 
         if (n != null) {
-
             news = (List<News>) n;
         }
 
         if (r != null) {
-
             requests = (List<Request>) r;
         }
 
         if (res != null) {
-
             researchers =
                     (List<ResearchDecorator>) res;
         }
 
         if (org != null) {
-
             organizations =
                     (List<StudentOrganization>) org;
         }
@@ -438,12 +395,10 @@ public class DataStorage {
                 new ArrayList<>();
 
         for (ResearchDecorator r : researchers) {
-
             all.addAll(r.getPapers());
         }
 
         if (all.isEmpty()) {
-
             System.out.println(
                     "No research papers found."
             );
@@ -452,11 +407,9 @@ public class DataStorage {
         }
 
         if (comparator != null) {
-
             all.sort(comparator);
 
         } else {
-
             Collections.sort(all);
         }
 
@@ -467,7 +420,6 @@ public class DataStorage {
         );
 
         for (ResearchPaper p : all) {
-
             System.out.println("  " + p);
         }
     }
@@ -482,7 +434,6 @@ public class DataStorage {
     getTopCitedResearcher() {
 
         if (researchers.isEmpty()) {
-
             return null;
         }
 

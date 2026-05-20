@@ -26,85 +26,21 @@ import java.util.Map;
  * @version 1.0
  */
 public class Student extends User implements Comparable<Student>, Serializable {
-
-    /**
-     * Serialization version UID.
-     */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Unique student identifier.
-     */
     protected String studentId;
-
-    /**
-     * Student major/specialization.
-     */
     protected String major;
-
-    /**
-     * Current year of study.
-     */
     protected int year;
-
-    /**
-     * Current GPA of the student.
-     */
     private double gpa;
-
-    /**
-     * Total amount of registered credits.
-     */
-    private int credits;
-
-    /**
-     * Number of failed courses.
-     */
+    int credits;
     private int failCount;
-
-    /**
-     * Student transcript containing all marks.
-     */
     private Transcript transcript;
-
-    /**
-     * Organization joined by the student.
-     */
     private StudentOrganization organization;
-
-    /**
-     * Map storing marks for each course.
-     */
     private Map<Course, Mark> marks;
-
-    /**
-     * List of registered courses.
-     */
     private List<Course> courses;
-
-    /**
-     * List of subscribed scientific journals.
-     */
     private List<Journal> subscribedJournals;
-
-    /**
-     * Research profile of the student.
-     * Null if the student is not a researcher.
-     */
     private ResearchDecorator researchProfile;
 
-    /**
-     * Constructs a Student object.
-     *
-     * @param id system user id
-     * @param login user login
-     * @param password user password
-     * @param firstName student's first name
-     * @param lastName student's last name
-     * @param studentId student identifier
-     * @param major student's major
-     * @param year year of study
-     */
+
     public Student(int id,
                    String login,
                    String password,

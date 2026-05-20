@@ -29,12 +29,7 @@ public class ResearchProject implements Serializable {
         if (!participants.contains(researcher)) {
             participants.add(researcher);
             DataStorage.getInstance().registerResearcher(researcher);
-            System.out.println(
-                    "[ResearchProject] "
-                    + researcher.getUser()
-                    + " joined "
-                    + topic
-            );
+            System.out.println("[ResearchProject] " + researcher.getUser() + " joined " + topic);
         }
     }
 
@@ -76,15 +71,7 @@ public class ResearchProject implements Serializable {
     @Override
     public String toString() {
 
-        return "ResearchProject[topic="
-                + topic
-                + ", participants="
-                + participants.size()
-                + ", papers="
-                + papers.size()
-                + ", status="
-                + status
-                + "]";
+        return "ResearchProject[topic=" + topic + ", participants=" + participants.size() + ", papers=" + papers.size() + ", status=" + status + "]";
     }
 
     @Override

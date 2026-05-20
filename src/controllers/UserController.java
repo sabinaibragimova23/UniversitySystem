@@ -27,7 +27,6 @@ public class UserController {
 
     public static boolean removeUser(Admin admin,
                                      User user) {
-
         admin.removeUser(user);
         return true;
     }
@@ -36,7 +35,6 @@ public class UserController {
                                      User user,
                                      String newFirst,
                                      String newLast) {
-
         admin.updateUser(user, newFirst, newLast);
         return true;
     }
@@ -57,10 +55,7 @@ public class UserController {
     public static void listUsers() {
         for (User u : DataStorage.getUsers()) {
             System.out.println(
-                    "  ["
-                            + u.getClass().getSimpleName()
-                            + "] "
-                            + u
+                    "  [" + u.getClass().getSimpleName() + "] " + u
             );
         }
     }
@@ -69,10 +64,7 @@ public class UserController {
                                       Language lang) {
         user.switchLanguage(lang);
         System.out.println(
-                "[Language] "
-                        + user
-                        + " -> "
-                        + lang.getGreeting()
+                "[Language] " + user + " -> " + lang.getGreeting()
         );
     }
 }

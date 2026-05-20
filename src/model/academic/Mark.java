@@ -39,27 +39,16 @@ public class Mark implements Serializable {
     }
 
     public GradeLetter getGrade() {
-
         double t = getTotal();
-
         if (t >= 95) return GradeLetter.A;
-
         if (t >= 90) return GradeLetter.A_MINUS;
-
         if (t >= 85) return GradeLetter.B_PLUS;
-
         if (t >= 80) return GradeLetter.B;
-
         if (t >= 75) return GradeLetter.B_MINUS;
-
         if (t >= 70) return GradeLetter.C_PLUS;
-
         if (t >= 65) return GradeLetter.C;
-
         if (t >= 60) return GradeLetter.C_MINUS;
-
         if (t >= 55) return GradeLetter.D_PLUS;
-
         if (t >= 50) return GradeLetter.D;
 
         return GradeLetter.F;

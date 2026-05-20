@@ -16,31 +16,15 @@ public class Manager extends Employee {
     private ManagerType type;
     private List<Student> managedStudents;
 
-    public Manager(int id,
-                   String login,
-                   String password,
-                   String firstName,
-                   String lastName,
-                   ManagerType type) {
-
-    	super(id,
-    	          login,
-    	          password,
-    	          firstName,
-    	          lastName);
+    public Manager(int id, String login, String password, String firstName, String lastName, ManagerType type) {
+    	super(id, login, password, firstName, lastName); 
     	this.type = type;
         this.managedStudents = new ArrayList<>();
     }
 
     public void assignCourse(Course course, Teacher teacher) {
-
         teacher.assignCourse(course);
-
-        System.out.println(
-                "[Manager] "
-                + teacher.getFirstName()
-                + " assigned to "
-                + course.getName()
+        System.out.println( "[Manager] " + teacher.getFirstName() + " assigned to " + course.getName()
         );
     }
 
@@ -48,17 +32,11 @@ public class Manager extends Employee {
         enrollment.approve();
     }
 
-    public void addCourseForReg(Course course,
-                                String major,
-                                int year) {
-
+    public void addCourseForReg(Course course, String major, int year) {
         course.setMajor(major);
         course.setYear(year);
-
         DataStorage.getInstance().addCourse(course);
-        System.out.println(
-                "[Manager] Added for registration: "
-                + course
+        System.out.println("[Manager] Added for registration: " + course
         );
     }
 
@@ -78,15 +56,15 @@ public class Manager extends Employee {
     }
 
     public void manageNews(News news) {
-        DataStorage.getInstance().addNews(news);
-        System.out.println(
-                "[Manager] News published: "
-                + news.getTitle()
+        DataStorage.getInstance();
+		DataStorage.addNews(news);
+        System.out.println( "[Manager] News published: " + news.getTitle()
         );
     }
 
     public List<Student> viewStudentsInfo(Comparator<Student> comparator) {
-        List<Student> list = DataStorage.getInstance()
+        DataStorage.getInstance();
+		List<Student> list = DataStorage
                 .getUsers()
                 .stream()
                 .filter(u -> u instanceof Student)
@@ -99,12 +77,12 @@ public class Manager extends Employee {
         for (Student s : list) {
             System.out.println("  " + s);
         }
-
         return list;
     }
 
     public void viewTeachersInfo() {
-        DataStorage.getInstance()
+        DataStorage.getInstance();
+		DataStorage
                 .getUsers()
                 .stream()
                 .filter(u -> u instanceof Teacher)
@@ -116,7 +94,6 @@ public class Manager extends Employee {
         for (Request r : requests) {
             System.out.println("  " + r);
         }
-
         return requests;
     }
 

@@ -33,12 +33,7 @@ public class News implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "News{" +
-                "title='" + title + '\'' +
-                ", topic='" + topic + '\'' +
-                ", pinned=" + isPinned +
-                ", date=" + date +
-                '}';
+        return "News{" + "title='" + title + '\'' + ", topic='" + topic + '\'' + ", pinned=" + isPinned + ", date=" + date + '}';
     }
 
 

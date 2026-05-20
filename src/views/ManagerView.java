@@ -18,7 +18,7 @@ public class ManagerView extends BaseView {
 
     public static void run(Manager manager) throws IOException {
 
-        System.out.println("\n=== Manager Panel: " + manager + " ===");
+        System.out.println("\n--- Manager Panel: " + manager + " ---");
         boolean active = true;
 
         while (active) {
@@ -57,19 +57,19 @@ public class ManagerView extends BaseView {
     private static void menu() {
         separator();
         System.out.println("MANAGER MENU:");
-        System.out.println("1  - Courses");
-        System.out.println("2  - Add course");
-        System.out.println("3  - Assign course");
-        System.out.println("4  - Students by GPA");
-        System.out.println("5  - Students by name");
-        System.out.println("6  - Teachers");
-        System.out.println("7  - Report");
-        System.out.println("8  - Requests");
-        System.out.println("9  - Publish news");
+        System.out.println("1 - Courses");
+        System.out.println("2 - Add course");
+        System.out.println("3 - Assign course");
+        System.out.println("4 - Students by GPA");
+        System.out.println("5 - Students by name");
+        System.out.println("6 - Teachers");
+        System.out.println("7 - Report");
+        System.out.println("8 - Requests");
+        System.out.println("9 - Publish news");
         System.out.println("10 - News list");
         System.out.println("11 - Create organization");
         System.out.println("12 - Add comment to news");
-        System.out.println("0  - Logout");
+        System.out.println("0 - Logout");
         System.out.print("> ");
     }
 
@@ -93,30 +93,24 @@ public class ManagerView extends BaseView {
 
         System.out.print("Credits: ");
         int credits = Integer.parseInt(reader.readLine().trim());
-
         boolean ok = CourseController.addCourse(id, name, type, credits);
-
         if (ok) successMsg("Course added!");
     }
 
     private static void assignCourse(Manager manager) throws IOException {
-
         java.util.List<Course> courses = DataStorage.getCourses();
-
         if (courses.isEmpty()) {
             errorMsg("No courses available. Add a course first.");
             return;
         }
 
         System.out.println("COURSES");
-
         for (int i = 0; i < courses.size(); i++) {
             System.out.println("  " + (i + 1) + " - " + courses.get(i));
         }
 
         int ci = readIntRange("Pick course: ", 1, courses.size());
         Course course = courses.get(ci - 1);
-
         java.util.List<Teacher> teachers = DataStorage.getUsers().stream()
                 .filter(u -> u instanceof Teacher)
                 .map(u -> (Teacher) u)
@@ -173,41 +167,30 @@ public class ManagerView extends BaseView {
 
 
     private static void createOrgMenu() throws IOException {
-
         String name = readString("Organization name: ");
-
         model.users.StudentOrganization org =
                 new model.users.StudentOrganization(name);
-
         DataStorage.addOrganization(org);
         DataStorage.save();
-
         successMsg("Organization created: " + name);
     }
 
     private static void addCommentMenu() throws IOException {
-
         java.util.List<model.research.News> newsList = DataStorage.getNews();
-
         if (newsList.isEmpty()) {
             System.out.println("No news yet.");
             return;
         }
 
         System.out.println("NEWS LIST");
-
         for (int i = 0; i < newsList.size(); i++) {
             System.out.println("  " + (i + 1) + " - " + newsList.get(i).getTitle());
         }
 
         int idx = readIntRange("Pick news: ", 1, newsList.size());
-
         model.research.News chosen = newsList.get(idx - 1);
-
         String comment = readString("Comment: ");
-
         chosen.addComment(comment);
-
         successMsg("Comment added to: " + chosen.getTitle());
     }
 }
