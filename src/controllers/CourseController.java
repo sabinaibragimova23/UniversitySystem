@@ -8,6 +8,7 @@ import model.exceptions.CreditLimitException;
 import model.users.Manager;
 import model.users.Student;
 import model.users.Teacher;
+import model.users.User;
 
 public class CourseController {
 
@@ -15,7 +16,6 @@ public class CourseController {
                                     String name,
                                     CourseType type,
                                     int credits) {
-
         Course c = new Course(courseId, name, type, credits);
         DataStorage.addCourse(c);
         boolean result = DataStorage.save();
@@ -27,14 +27,12 @@ public class CourseController {
 
     public static void listCourses() {
         System.out.println("=== Courses ===");
-        DataStorage.getCourses()
-                .forEach(System.out::println);
+        DataStorage.getCourses().forEach(System.out::println);
     }
 
     public static boolean assignToTeacher(Course course,
                                           Teacher teacher,
                                           Manager manager) {
-
         manager.assignCourse(course, teacher);
         DataStorage.save();
         return true;
@@ -47,10 +45,7 @@ public class CourseController {
             DataStorage.save();
             return true;
         } catch (CreditLimitException e) {
-            System.out.println(
-                    "[Course] Registration failed: "
-                            + e.getMessage()
-            );
+            System.out.println("[Course] Registration failed: " + e.getMessage());
             return false;
         }
     }
@@ -60,7 +55,27 @@ public class CourseController {
                                   Course course,
                                   Mark mark) {
 
-        teacher.putMark(student, course, mark);
+        
+        Student real = student;
+        for (User u : DataStorage.getUsers()) {
+            if (u instanceof Student
+                    && u.getLogin() != null
+                    && u.getLogin().equals(student.getLogin())) {
+                real = (Student) u;
+                break;
+            }
+        }
+
+        
+        Course realCourse = course;
+        for (Course c : DataStorage.getCourses()) {
+            if (c.getCourseId().equals(course.getCourseId())) {
+                realCourse = c;
+                break;
+            }
+        }
+
+        teacher.putMark(real, realCourse, mark);
         DataStorage.save();
         return true;
     }

@@ -136,7 +136,12 @@ public class AcademicReport implements Serializable {
         return sb.toString();
     }
 
-    public void generateTeacherSummary() {
+    private Object buildBar(Long value, int size) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void generateTeacherSummary() {
         System.out.println("            TEACHER SUMMARY             ");
         System.out.println("Teacher : " + teacher);
         System.out.println("Courses : " + teacher.getCourses().size());
