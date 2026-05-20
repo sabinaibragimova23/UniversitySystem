@@ -170,17 +170,69 @@ public class StudentView extends BaseView {
     }
 
     private static void becomeResearcherMenu(Student student) throws IOException {
-        if (student.isResearcher()) {
-            System.out.println("You are already a Researcher.");
-            System.out.println("h-index: " + student.getResearchProfile().calculateHIndex());
+        if (!student.isResearcher()) {
+            System.out.println("Become Researcher? 1-Yes  0-No");
+            if (readIntRange("> ", 0, 1) == 1) {
+                student.becomeResearcher();
+                DataStorage.save();
+                successMsg("You are now a Researcher!");
+            }
             return;
         }
-        System.out.println("Become Researcher? 1-Yes  0-No");
-        if (readIntRange("> ", 0, 1) == 1) {
-            student.becomeResearcher();
-            DataStorage.save();
-            successMsg("You are now a Researcher!");
+
+        // уже Researcher — открываем research меню
+        ResearchDecorator profile = student.getResearchProfile();
+        separator();
+        System.out.println("RESEARCH  [H-index: " + profile.calculateHIndex()
+            + "  Papers: " + profile.getPapers().size() + "]");
+        System.out.println("1 - Publish paper");
+        System.out.println("2 - My papers (by citations)");
+        System.out.println("3 - My papers (by date)");
+        System.out.println("4 - H-index");
+        System.out.println("5 - All university papers");
+        System.out.println("6 - Add citation to paper");
+        System.out.println("0 - Back");
+        int opt = readIntRange("> ", 0, 6);
+        switch (opt) {
+            case 1 -> publishPaperMenu(student);
+            case 2 -> ResearchController.printPapers(profile, new model.comparators.PaperCitationComparator());
+            case 3 -> ResearchController.printPapers(profile, new model.comparators.PaperDateComparator());
+            case 4 -> ResearchController.showHIndex(profile);
+            case 5 -> ResearchController.printAllPapers(new model.comparators.PaperCitationComparator());
+            case 6 -> addCitationMenu(profile);
+            case 0 -> {}
         }
+    }
+
+    private static void publishPaperMenu(Student student) throws IOException {
+        String title   = readString("Title: ");
+        String journal = readString("Journal: ");
+        int pages      = readIntRange("Pages: ", 1, 9999);
+        String doi     = readString("DOI: ");
+        String authors = readString("Authors (comma separated): ");
+        ResearchPaper paper = new ResearchPaper(
+            title,
+            java.util.Arrays.asList(authors.split(",")),
+            journal, pages, new java.util.Date(), doi
+        );
+        ResearchController.publishPaper(student.getResearchProfile(), paper);
+        successMsg("Paper published.");
+    }
+
+    private static void addCitationMenu(ResearchDecorator profile) throws IOException {
+        java.util.List<ResearchPaper> papers = profile.getPapers();
+        if (papers.isEmpty()) { errorMsg("No papers yet. Publish one first."); return; }
+        System.out.println("Your papers:");
+        for (int i = 0; i < papers.size(); i++) {
+            System.out.println((i + 1) + " - " + papers.get(i).getTitle()
+                + " | citations: " + papers.get(i).getCitations());
+        }
+        int pi = readIntRange("Pick paper: ", 1, papers.size());
+        int count = readIntRange("Add citations (1-10): ", 1, 10);
+        for (int i = 0; i < count; i++) papers.get(pi - 1).addCitation();
+        DataStorage.save();
+        successMsg("Citations: " + papers.get(pi - 1).getCitations()
+            + " | H-index: " + profile.calculateHIndex());
     }
 
     private static void submitRequestMenu(Student student) throws IOException {

@@ -79,6 +79,7 @@ public class GraduateStudentView extends BaseView {
         System.out.println("5 - Show h-index");
         System.out.println("6 - Join project");
         System.out.println("7 - Subscribe journal");
+        System.out.println("8 - Add citation to paper");
         System.out.print("> ");
         int option = Integer.parseInt(reader.readLine().trim());
         switch (option) {
@@ -163,10 +164,39 @@ public class GraduateStudentView extends BaseView {
             User u = allUsers.get(i);
             System.out.println((i + 1) + " - [" + u.getClass().getSimpleName() + "] " + u.getFirstName() + " " + u.getLastName());
         }
+        
         int ri = readIntRange("Send to: ", 1, allUsers.size());
         String message = readString("Message: ");
         student.sendMessage(allUsers.get(ri - 1), message);
         successMsg("Message sent.");
+    }
+    
+    private static void addCitationMenu(ResearchDecorator profile)
+            throws IOException {
+
+        java.util.List<model.research.ResearchPaper> papers = profile.getPapers();
+
+        if (papers.isEmpty()) {
+            errorMsg("No papers yet. Publish one first.");
+            return;
+        }
+
+        System.out.println("Your papers:");
+        for (int i = 0; i < papers.size(); i++) {
+            System.out.println((i + 1) + " - " + papers.get(i).getTitle()
+                + " | citations: " + papers.get(i).getCitations());
+        }
+
+        int pi = readIntRange("Pick paper: ", 1, papers.size());
+        int count = readIntRange("Add citations (1-10): ", 1, 10);
+
+        for (int i = 0; i < count; i++) {
+            papers.get(pi - 1).addCitation();
+        }
+
+        core.DataStorage.save();
+        successMsg("Citations: " + papers.get(pi - 1).getCitations()
+            + " | H-index: " + profile.calculateHIndex());
     }
 
     private static void switchLanguageMenu(GraduateStudent student) throws IOException {
