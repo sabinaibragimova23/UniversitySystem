@@ -1,304 +1,213 @@
 package views;
 
 import controllers.*;
+import core.AppContext;
 import core.DataStorage;
-import model.academic.Course;
-import model.enums.Language;
-import model.research.Journal;
-import model.research.News;
-import model.research.ResearchDecorator;
+import model.academic.*;
+import model.enums.*;
+import model.research.*;
 import model.users.*;
+import model.users.StudentOrganization;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StudentView extends BaseView {
 
     public static void run(Student student) throws IOException {
-        System.out.println("\n=== Student: " + student.getFirstName()
-            + " " + student.getLastName() + " ===");
-        System.out.println("Major: " + student.getMajor()
-            + "  Year: " + student.getYear()
-            + "  Credits: " + student.getCredits() + "/21"
-            + "  GPA: " + String.format("%.2f", student.getGpa()));
+        System.out.println("\n=== Student Panel: " + student.getFirstName() + " " + student.getLastName() + " ===");
+        System.out.println("Major: " + student.getMajor() + " | Year: " + student.getYear()
+                + " | Credits: " + student.getCredits() + " | GPA: " + String.format("%.2f", student.getGpa()));
 
         boolean active = true;
         while (active) {
-            printMenu(student);
+            showMenu(student);
             int option = readIntRange("> ", 0, 16);
             switch (option) {
-                case 1  -> showAllCourses();
-                case 2  -> registerForCourse(student);
+                case 1  -> listAvailableCourses();
+                case 2  -> registerCourseMenu(student);
                 case 3  -> student.viewCourses();
                 case 4  -> student.viewMarks();
                 case 5  -> student.getTranscript().print();
-                case 6  -> viewTeacherInfo(student);
-                case 7  -> rateTeacher(student);
-                case 8  -> showOrgsAndJoin(student);
+                case 6  -> viewTeacherInfoMenu(student);
+                case 7  -> rateTeacherMenu(student);
+                case 8  -> listAndJoinOrgMenu(student);
                 case 9  -> student.viewOrg();
-                case 10 -> subscribeJournal(student);
+                case 10 -> subscribeJournalMenu(student);
                 case 11 -> student.viewNotifications();
-                case 12 -> sendMessage(student);
-                case 13 -> switchLang(student);
-                case 14 -> becomeResearcher(student);
-                case 15 -> submitRequest(student);
-                case 16 -> showNews();
-                case 0  -> {
-                    System.out.println("Logged out.");
-                    active = false;
-                }
+                case 12 -> sendMessageMenu(student);
+                case 13 -> switchLanguageMenu(student);
+                case 14 -> becomeResearcherMenu(student);
+                case 15 -> submitRequestMenu(student);
+                case 16 -> viewNewsMenu();
+                case 0  -> { System.out.println("[Student] " + AppContext.tr("logout") + "."); active = false; }
             }
         }
     }
 
-    private static void printMenu(Student student) {
+    private static void showMenu(Student student) {
         separator();
-        System.out.println("STUDENT MENU"
-            + "  [Credits: " + student.getCredits() + "/21"
-            + "  GPA: " + String.format("%.2f", student.getGpa()) + "]");
-        System.out.println("1  - All courses");
-        System.out.println("2  - Register for course");
-        System.out.println("3  - My courses");
-        System.out.println("4  - My marks");
-        System.out.println("5  - Transcript");
-        System.out.println("6  - Teacher info");
-        System.out.println("7  - Rate teacher");
-        System.out.println("8  - Organizations");
-        System.out.println("9  - My organization");
-        System.out.println("10 - Subscribe to journal");
-        System.out.println("11 - Notifications");
-        System.out.println("12 - Send message");
-        System.out.println("13 - Language");
-        System.out.println("14 - Researcher menu");
-        System.out.println("15 - Submit tech request");
-        System.out.println("16 - News");
-        System.out.println("0  - Logout");
+
+        System.out.println(AppContext.tr("studentMenu") + "  [Credits: "
+                + student.getCredits() + "/21 | GPA: "
+                + String.format("%.2f", student.getGpa()) + "]");
+
+        System.out.println("1  - " + AppContext.tr("availableCourses"));
+        System.out.println("2  - " + AppContext.tr("registerCourse"));
+        System.out.println("3  - " + AppContext.tr("myCourses"));
+        System.out.println("4  - " + AppContext.tr("myMarks"));
+        System.out.println("5  - " + AppContext.tr("transcript"));
+        System.out.println("6  - " + AppContext.tr("viewTeacher"));
+        System.out.println("7  - " + AppContext.tr("rateTeacher"));
+        System.out.println("8  - " + AppContext.tr("studentOrgs"));
+        System.out.println("9  - " + AppContext.tr("myOrg"));
+        System.out.println("10 - " + AppContext.tr("subscribeJournal"));
+        System.out.println("11 - " + AppContext.tr("notifications"));
+        System.out.println("12 - " + AppContext.tr("sendMessage"));
+        System.out.println("13 - " + AppContext.tr("switchLanguage"));
+        System.out.println("14 - " + AppContext.tr("becomeResearcher"));
+        System.out.println("15 - " + AppContext.tr("submitRequest"));
+        System.out.println("16 - " + AppContext.tr("viewNews"));
+        System.out.println("0  - " + AppContext.tr("logout"));
     }
 
-    private static void showAllCourses() {
-        List<Course> all = DataStorage.getCourses();
-        if (all.isEmpty()) {
-            System.out.println("No courses available yet.");
-            return;
-        }
-        System.out.println("\nAvailable courses:");
-        for (int i = 0; i < all.size(); i++) {
-            Course c = all.get(i);
-            String teachers;
-            if (!c.getInstructors().isEmpty()) {
-                StringBuilder sb = new StringBuilder();
-                for (var t : c.getInstructors()) {
-                    if (sb.length() > 0) sb.append(", ");
-                    sb.append(t.getFirstName()).append(" ").append(t.getLastName());
-                }
-                teachers = " | " + sb;
-            } else {
-                teachers = " | teacher TBA";
-            }
-            System.out.println((i + 1) + ". [" + c.getCourseId() + "] "
-                + c.getName() + " (" + c.getCredits() + " cr)"
-                + " " + c.getType() + teachers);
-        }
-    }
-
-    private static void registerForCourse(Student student) throws IOException {
+    private static void listAvailableCourses() {
         List<Course> all = DataStorage.getCourses();
         if (all.isEmpty()) { System.out.println("No courses available."); return; }
-        showAllCourses();
-        int pick = readIntRange("Pick number: ", 1, all.size());
-        Course course = all.get(pick - 1);
-        boolean ok = CourseController.registerStudent(student, course);
-        if (ok) {
-            successMsg("Registered for " + course.getName()
-                + ". Credits: " + student.getCredits() + "/21");
+        System.out.println("=== Available Courses ===");
+        for (int i = 0; i < all.size(); i++) {
+            Course c = all.get(i);
+            String teachers = c.getInstructors().isEmpty() ? "TBA"
+                    : c.getInstructors().stream().map(t -> t.getFirstName() + " " + t.getLastName()).collect(Collectors.joining(", "));
+            System.out.printf("%d - [%s] %s | %d credits | Teachers: %s%n", i + 1, c.getCourseId(), c.getName(), c.getCredits(), teachers);
         }
     }
 
-    private static void viewTeacherInfo(Student student) throws IOException {
+    private static void registerCourseMenu(Student student) throws IOException {
+        List<Course> all = DataStorage.getCourses();
+        if (all.isEmpty()) { System.out.println("No courses available."); return; }
+        listAvailableCourses();
+        int pick = readIntRange("Pick course number: ", 1, all.size());
+        Course course = all.get(pick - 1);
+        boolean ok = CourseController.registerStudent(student, course);
+        if (ok) successMsg("Registered for " + course.getName() + " | Credits: " + student.getCredits() + "/21");
+    }
+
+    private static void viewTeacherInfoMenu(Student student) throws IOException {
         List<Course> mine = student.getCourses();
-        if (mine.isEmpty()) {
-            System.out.println("Register for a course first.");
-            return;
-        }
-        System.out.println("Your courses:");
-        for (int i = 0; i < mine.size(); i++) {
-            System.out.println((i + 1) + " - " + mine.get(i).getName());
-        }
-        int pick = readIntRange("Pick: ", 1, mine.size());
+        if (mine.isEmpty()) { System.out.println("You have no registered courses."); return; }
+        System.out.println("=== My Courses ===");
+        for (int i = 0; i < mine.size(); i++) System.out.println((i + 1) + " - " + mine.get(i).getName());
+        int pick = readIntRange("Pick course: ", 1, mine.size());
         student.viewTeacherInfo(mine.get(pick - 1));
     }
 
-    private static void rateTeacher(Student student) throws IOException {
-        List<Teacher> teachers = new ArrayList<>();
-        for (Course c : student.getCourses()) {
-            for (Teacher t : c.getInstructors()) {
-                if (!teachers.contains(t)) teachers.add(t);
-            }
-        }
-        if (teachers.isEmpty()) {
-            System.out.println("No teachers to rate. Register for courses first.");
-            return;
-        }
-        System.out.println("Your teachers:");
+    private static void rateTeacherMenu(Student student) throws IOException {
+        List<Teacher> teachers = student.getCourses().stream()
+                .flatMap(c -> c.getInstructors().stream()).distinct().collect(Collectors.toList());
+        if (teachers.isEmpty()) { System.out.println("No teachers found. Register for courses first."); return; }
+        System.out.println("=== Teachers ===");
         for (int i = 0; i < teachers.size(); i++) {
             Teacher t = teachers.get(i);
-            System.out.println((i + 1) + " - " + t.getFirstName()
-                + " " + t.getLastName()
-                + " | current: " + String.format("%.1f", t.getRating()));
+            System.out.printf("%d - %s %s | %s | Rating: %.1f%n", i + 1, t.getFirstName(), t.getLastName(), t.getPosition(), t.getRating());
         }
-        int ti = readIntRange("Pick teacher: ", 1, teachers.size());
+        int pick = readIntRange("Pick teacher: ", 1, teachers.size());
         double rating = readIntRange("Rating (1-5): ", 1, 5);
-        student.rateTeacher(teachers.get(ti - 1), rating);
+        student.rateTeacher(teachers.get(pick - 1), rating);
         successMsg("Rating submitted.");
     }
 
-    private static void showOrgsAndJoin(Student student) throws IOException {
+    private static void listAndJoinOrgMenu(Student student) throws IOException {
         List<StudentOrganization> orgs = DataStorage.getOrganizations();
-        if (orgs.isEmpty()) {
-            System.out.println("No organizations yet. Ask manager to create one.");
-            return;
-        }
-        System.out.println("\nStudent organizations:");
+        if (orgs.isEmpty()) { System.out.println("No organizations found."); return; }
+        System.out.println("=== Student Organizations ===");
         for (int i = 0; i < orgs.size(); i++) {
             StudentOrganization org = orgs.get(i);
-            String head = org.getHead() != null
-                ? org.getHead().getFirstName() + " " + org.getHead().getLastName()
-                : "no head";
-            System.out.println((i + 1) + " - " + org.getName()
-                + " | Head: " + head
-                + " | Members: " + org.getMembers().size());
+            String head = org.getHead() != null ? org.getHead().getFirstName() + " " + org.getHead().getLastName() : "No head";
+            System.out.printf("%d - %s | Head: %s | Members: %d%n", i + 1, org.getName(), head, org.getMembers().size());
         }
         System.out.println("0 - Back");
-        int pick = readIntRange("Join which? ", 0, orgs.size());
+        int pick = readIntRange("Join organization: ", 0, orgs.size());
         if (pick == 0) return;
-        orgs.get(pick - 1).addMember(student);
+        StudentOrganization chosen = orgs.get(pick - 1);
+        chosen.addMember(student);
         DataStorage.save();
-        successMsg("Joined " + orgs.get(pick - 1).getName() + ".");
+        successMsg("Joined: " + chosen.getName());
     }
 
-    private static void subscribeJournal(Student student) throws IOException {
+    private static void subscribeJournalMenu(Student student) throws IOException {
         String name = readString("Journal name: ");
-        Journal journal = new Journal(name);
-        ResearchController.subscribeJournal(student, journal);
-        successMsg("Subscribed to " + name + ".");
+        ResearchController.subscribeJournal(student, new Journal(name));
+        successMsg("Subscribed to " + name);
     }
 
-    private static void sendMessage(Student student) throws IOException {
-        List<User> all = new ArrayList<>();
-        for (User u : DataStorage.getUsers()) {
-            if (u.getLogin() != null && !u.getLogin().equals(student.getLogin())) {
-                all.add(u);
-            }
+    private static void sendMessageMenu(Student student) throws IOException {
+        List<User> users = DataStorage.getUsers().stream()
+                .filter(u -> u.getLogin() != null && !u.getLogin().equals(student.getLogin())).collect(Collectors.toList());
+        if (users.isEmpty()) { System.out.println("No users found."); return; }
+        System.out.println("=== Users ===");
+        for (int i = 0; i < users.size(); i++) {
+            User u = users.get(i);
+            System.out.printf("%d - [%s] %s %s%n", i + 1, u.getClass().getSimpleName(), u.getFirstName(), u.getLastName());
         }
-        if (all.isEmpty()) { errorMsg("No other users."); return; }
-        System.out.println("Users:");
-        for (int i = 0; i < all.size(); i++) {
-            System.out.println((i + 1) + " - ["
-                + all.get(i).getClass().getSimpleName() + "] "
-                + all.get(i).getFirstName() + " " + all.get(i).getLastName());
-        }
-        int ri = readIntRange("Send to: ", 1, all.size());
+        int pick = readIntRange("Send to: ", 1, users.size());
         String msg = readString("Message: ");
-        student.sendMessage(all.get(ri - 1), msg);
-        successMsg("Sent.");
+        student.sendMessage(users.get(pick - 1), msg);
+        successMsg("Message sent.");
     }
 
-    private static void switchLang(Student student) throws IOException {
-        System.out.println("1 - EN   2 - KZ   3 - RU");
+    private static void switchLanguageMenu(Student student) throws IOException {
+        System.out.println("Language:");
+        System.out.println("1 - EN");
+        System.out.println("2 - KZ");
+        System.out.println("3 - RU");
         int l = readIntRange("> ", 1, 3);
         Language lang = l == 2 ? Language.KZ : l == 3 ? Language.RU : Language.EN;
         student.switchLanguage(lang);
-        System.out.println(lang.getGreeting());
+        AppContext.setLanguage(lang);
+        System.out.println("Greeting: " + lang.getGreeting());
     }
 
-    private static void becomeResearcher(Student student) throws IOException {
-        if (!student.isResearcher()) {
-            System.out.println("Become a Researcher?  1-Yes  0-No");
-            if (readIntRange("> ", 0, 1) == 1) {
-                student.becomeResearcher();
-                DataStorage.save();
-                successMsg("You are now a Researcher!");
-            }
+    private static void becomeResearcherMenu(Student student) throws IOException {
+        if (student.isResearcher()) {
+            System.out.println("You are already a Researcher.");
+            System.out.println("h-index: " + student.getResearchProfile().calculateHIndex());
             return;
         }
-        ResearchDecorator profile = student.getResearchProfile();
-        separator();
-        System.out.println("RESEARCH  [H-index: " + profile.calculateHIndex()
-            + "  Papers: " + profile.getPapers().size() + "]");
-        System.out.println("1 - Publish paper");
-        System.out.println("2 - My papers (by citations)");
-        System.out.println("3 - My papers (by date)");
-        System.out.println("4 - H-index");
-        System.out.println("5 - All university papers");
-        System.out.println("0 - Back");
-        int opt = readIntRange("> ", 0, 5);
-        switch (opt) {
-            case 1 -> publishPaper(student);
-            case 2 -> ResearchController.printPapers(profile,
-                          new model.comparators.PaperCitationComparator());
-            case 3 -> ResearchController.printPapers(profile,
-                          new model.comparators.PaperDateComparator());
-            case 4 -> ResearchController.showHIndex(profile);
-            case 5 -> ResearchController.printAllPapers(
-                          new model.comparators.PaperCitationComparator());
-            case 0 -> {}
+        System.out.println("Become Researcher? 1-Yes  0-No");
+        if (readIntRange("> ", 0, 1) == 1) {
+            student.becomeResearcher();
+            DataStorage.save();
+            successMsg("You are now a Researcher!");
         }
     }
 
-    private static void publishPaper(Student student) throws IOException {
-        String title   = readString("Title: ");
-        String journal = readString("Journal: ");
-        int pages      = readInt("Pages: ");
-        String doi     = readString("DOI: ");
-        String authors = readString("Authors (comma separated): ");
-        model.research.ResearchPaper paper = new model.research.ResearchPaper(
-            title,
-            java.util.Arrays.asList(authors.split(",")),
-            journal, pages, new java.util.Date(), doi
-        );
-        ResearchController.publishPaper(student.getResearchProfile(), paper);
-        successMsg("Paper published.");
-    }
-
-    private static void submitRequest(Student student) throws IOException {
-        String desc = readString("Describe the problem: ");
-        TechSupportController.createRequest(desc, student);
+    private static void submitRequestMenu(Student student) throws IOException {
+        String description = readString("Request description: ");
+        TechSupportController.createRequest(description, student);
         successMsg("Request submitted.");
     }
 
-    private static void showNews() throws IOException {
-        List<News> newsList = DataStorage.getNews();
-        if (newsList.isEmpty()) {
-            System.out.println("No news yet.");
-            return;
-        }
-        System.out.println("\nNEWS:");
+    private static void viewNewsMenu() throws IOException {
+        java.util.List<model.research.News> newsList = DataStorage.getNews();
+        if (newsList.isEmpty()) { System.out.println("No news yet."); return; }
+        System.out.println("NEWS");
         for (int i = 0; i < newsList.size(); i++) {
-            News n = newsList.get(i);
-            String pin = n.isPinned() ? "[PINNED] " : "";
-            System.out.println((i + 1) + ". " + pin + n.getTitle()
-                + " [" + n.getTopic() + "]");
+            model.research.News n = newsList.get(i);
+            System.out.println((n.isPinned() ? "[PINNED] " : "") + (i + 1) + ". " + n.getTitle() + " [" + n.getTopic() + "]");
         }
-        System.out.println("0 - Back");
-        int pick = readIntRange("Open article: ", 0, newsList.size());
+        System.out.println("Enter number to comment, 0 to go back:");
+        int pick = readIntRange("> ", 0, newsList.size());
         if (pick == 0) return;
-        News selected = newsList.get(pick - 1);
-        System.out.println("\n--- " + selected.getTitle() + " ---");
+        model.research.News selected = newsList.get(pick - 1);
+        System.out.println(selected.getTitle());
         System.out.println(selected.getContent());
-        List<String> comments = selected.getComments();
-        if (!comments.isEmpty()) {
-            System.out.println("\nComments:");
-            for (String c : comments) {
-                System.out.println("  > " + c);
-            }
+        if (!selected.getComments().isEmpty()) {
+            System.out.println("Comments:");
+            for (String c : selected.getComments()) System.out.println("  - " + c);
         }
-        System.out.print("Add comment (Enter to skip): ");
-        String comment = reader.readLine();
-        if (comment != null && !comment.trim().isEmpty()) {
-            selected.addComment(comment.trim());
-            DataStorage.save();
-            successMsg("Comment added.");
-        }
+        String comment = readString("Add comment (or Enter to skip): ");
+        if (!comment.trim().isEmpty()) { selected.addComment(comment.trim()); DataStorage.save(); successMsg("Comment added."); }
     }
 }

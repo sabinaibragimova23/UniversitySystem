@@ -1,6 +1,7 @@
 package views;
 
 import controllers.*;
+import core.AppContext;
 import model.users.*;
 import model.communication.Request;
 import model.enums.RequestStatus;
@@ -24,11 +25,7 @@ public class TechSupportView extends BaseView {
                 case 4 -> rejectMenu(tech);
                 case 5 -> doneMenu(tech);
                 case 6 -> sendMessageMenu(tech);
-                case 0 -> {
-                    System.out.println("Session closed.");
-                    running = false;
-                }
-
+                case 0 -> { System.out.println("Session closed."); running = false; }
                 default -> errorMsg("Unknown option.");
             }
         }
@@ -36,28 +33,24 @@ public class TechSupportView extends BaseView {
 
     private static void menu() {
         separator();
-        System.out.println("TECH SUPPORT MENU");
-        System.out.println("1 - New requests");
-        System.out.println("2 - My requests");
-        System.out.println("3 - Accept request");
-        System.out.println("4 - Reject request");
-        System.out.println("5 - Mark DONE");
-        System.out.println("6 - Send message");
-        System.out.println("0 - Logout");
+        System.out.println(AppContext.tr("techMenu"));
+        System.out.println("1 - " + AppContext.tr("newRequests"));
+        System.out.println("2 - " + AppContext.tr("myRequests"));
+        System.out.println("3 - " + AppContext.tr("acceptRequest"));
+        System.out.println("4 - " + AppContext.tr("rejectRequest"));
+        System.out.println("5 - " + AppContext.tr("markDone"));
+        System.out.println("6 - " + AppContext.tr("sendMessage"));
+        System.out.println("0 - " + AppContext.tr("logout"));
     }
-    
+
     public static void showNewRequests() {
         separator();
         System.out.println("NEW REQUESTS:");
         boolean found = false;
         for (Request r : DataStorage.getRequests()) {
-            if (r.getStatus() == RequestStatus.NEW
-                    || r.getStatus() == RequestStatus.VIEWED) {
-                System.out.println("  [" + r.getStatus() + "] "
-                    + r.getDescription()
-                    + " | from: "
-                    + r.getAuthor().getFirstName()
-                    + " " + r.getAuthor().getLastName());
+            if (r.getStatus() == RequestStatus.NEW || r.getStatus() == RequestStatus.VIEWED) {
+                System.out.println("  [" + r.getStatus() + "] " + r.getDescription()
+                        + " | from: " + r.getAuthor().getFirstName() + " " + r.getAuthor().getLastName());
                 found = true;
             }
         }
@@ -94,32 +87,19 @@ public class TechSupportView extends BaseView {
 
     private static Request pickRequest() throws IOException {
         List<Request> requests = DataStorage.getRequests();
-        if (requests.isEmpty()) {
-            System.out.println("No requests available.");
-            return null;
-        }
-
+        if (requests.isEmpty()) { System.out.println("No requests available."); return null; }
         System.out.println("\nREQUEST LIST");
-        for (int i = 0; i < requests.size(); i++) {
-            System.out.println("  " + (i + 1) + " - " + requests.get(i));
-        }
-
+        for (int i = 0; i < requests.size(); i++) System.out.println("  " + (i + 1) + " - " + requests.get(i));
         int idx = readIntRange("> ", 1, requests.size());
         return requests.get(idx - 1);
     }
 
     private static void sendMessageMenu(TechSupportSpecialist tech) throws IOException {
         String login = readString("Recipient login: ");
-        String msg = readString("Message: ");
+        String msg   = readString("Message: ");
         User receiver = DataStorage.getUsers().stream()
-                .filter(u -> u.getLogin().equals(login))
-                .findFirst()
-                .orElse(null);
-
-        if (receiver == null) {
-            errorMsg("User not found: " + login);
-            return;
-        }
+                .filter(u -> u.getLogin().equals(login)).findFirst().orElse(null);
+        if (receiver == null) { errorMsg("User not found: " + login); return; }
         tech.sendMessage(receiver, msg);
         successMsg("Message sent.");
     }

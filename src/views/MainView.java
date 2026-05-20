@@ -1,10 +1,11 @@
 package views;
 
 import controllers.UserController;
-import core.UserFactory;
+import core.AppContext;
 import core.DataStorage;
-import model.users.*;
+import core.UserFactory;
 import model.enums.*;
+import model.users.*;
 
 import java.io.IOException;
 
@@ -18,15 +19,15 @@ public class MainView extends BaseView {
         while (running) {
             mainMenuMsg();
 
-            int option = readIntRange("> ", 0, 3);
+            int option = readIntRange(AppContext.tr("choose"), 0, 4);
 
             switch (option) {
-
                 case 1 -> handleLogin();
                 case 2 -> handleRegister();
-                case 3 -> System.out.println("University System v1.0 | OOP Final Project");
+                case 3 -> showAllUsers();
+                case 4 -> handleChangeLanguage();
                 case 0 -> {
-                    byeMsg();
+                    System.out.println(AppContext.tr("goodbye"));
                     running = false;
                 }
             }
@@ -102,9 +103,7 @@ public class MainView extends BaseView {
             System.out.println("Degree: 1-MASTER  2-PHD");
             int d = readIntRange("> ", 1, 2);
 
-            DegreeType degree = (d == 1)
-                    ? DegreeType.MASTER
-                    : DegreeType.PHD;
+            DegreeType degree = (d == 1) ? DegreeType.MASTER : DegreeType.PHD;
 
             gs.setStudentId(sid);
             gs.setMajor(major);
@@ -121,7 +120,7 @@ public class MainView extends BaseView {
             s.setMajor(major);
             s.setYear(year);
         }
-        
+
         if (newUser instanceof Teacher t) {
 
             System.out.println("Position:");
@@ -155,24 +154,42 @@ public class MainView extends BaseView {
         successMsg("Account created successfully.");
     }
 
-    public static void welcomeMsg() {
+    private static void showAllUsers() {
+        System.out.println("\n===== " + AppContext.tr("allUsers").toUpperCase() + " =====");
+        for (model.users.User u : DataStorage.getUsers()) {
+            System.out.println("  [" + u.getClass().getSimpleName() + "] "
+                    + u.getFirstName() + " " + u.getLastName()
+                    + " | login: " + u.getLogin());
+        }
+    }
 
+    private static void handleChangeLanguage() throws IOException {
+        System.out.println("\n1 - English");
+        System.out.println("2 - Қазақша");
+        System.out.println("3 - Русский");
+        int l = readIntRange("> ", 1, 3);
+        Language lang = l == 2 ? Language.KZ : l == 3 ? Language.RU : Language.EN;
+        AppContext.setLanguage(lang);
+        System.out.println(AppContext.tr("langChanged") + lang);
+    }
+
+    public static void welcomeMsg() {
         System.out.println("==================================");
         System.out.println("   UNIVERSITY SYSTEM");
         System.out.println("==================================");
+        System.out.println(AppContext.tr("welcome"));
     }
 
     public static void mainMenuMsg() {
-
-        System.out.println("\nMAIN MENU");
-        System.out.println("1 - Login");
-        System.out.println("2 - Register");
-        System.out.println("3 - About");
-        System.out.println("0 - Exit");
+        System.out.println("\n" + AppContext.tr("mainMenu"));
+        System.out.println("1 - " + AppContext.tr("login"));
+        System.out.println("2 - " + AppContext.tr("register"));
+        System.out.println("3 - " + AppContext.tr("showUsers"));
+        System.out.println("4 - " + AppContext.tr("changeLanguage"));
+        System.out.println("0 - " + AppContext.tr("exit"));
     }
 
     public static void byeMsg() {
-
-        System.out.println("\nSession ended.");
+        System.out.println("\n" + AppContext.tr("goodbye"));
     }
 }
